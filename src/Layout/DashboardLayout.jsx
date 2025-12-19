@@ -81,7 +81,7 @@ const DashboardLayout = () => {
                                                 : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
                                         }
                                         data-tip="Manage Users"
-                                        to="/dashboard/manage-Users">
+                                        to="/dashboard/manage-users">
                                         <MdManageAccounts className="my-1.5 inline-block size-4"> </MdManageAccounts >
 
                                         <span className="is-drawer-close:hidden">Manage Users</span>

@@ -13,6 +13,7 @@ import ScholarshipDetails from '../Pages/ScholarshipDetails/ScholarshipDetails';
 import DashboardLayout from '../Layout/DashboardLayout';
 import AddScholarship from '../Pages/Dashboard/AddScholarship/AddScholarship';
 import ManageScholarship from '../Pages/Dashboard/ManageScholarship/ManageScholarship';
+import ManageUsers from '../Pages/Dashboard/ManageUsers/ManageUsers';
 
 export const router = createBrowserRouter([
     {
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
                 path: "manage-scholarship",
                 Component: ManageScholarship
             },
+            {
+                path: 'manage-users',
+                Component: ManageUsers
+            }
             
 
         ]
