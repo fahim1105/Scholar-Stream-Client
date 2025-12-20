@@ -18,6 +18,7 @@ import AdminRoutes from './AdminRoutes';
 import AdminAnalytics from '../Pages/Dashboard/AdminAnalytics/AdminAnalytics';
 import PaymentSuccess from '../Pages/Payment/PaymentSuccess';
 import PaymentCancel from '../Pages/Payment/PaymentCancel';
+import AdminProfile from '../Pages/Dashboard/AdminProfile/AdminProfile';
 
 export const router = createBrowserRouter([
     {
@@ -84,6 +85,10 @@ export const router = createBrowserRouter([
                 path: 'manage-users',
                 // Component: ManageUsers
                 element:<AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
+            },
+            {
+                path: 'admin-profile',
+                element:<AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
             }
             
 
