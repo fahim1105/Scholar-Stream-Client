@@ -16,6 +16,7 @@ import ManageScholarship from '../Pages/Dashboard/ManageScholarship/ManageSchola
 import ManageUsers from '../Pages/Dashboard/ManageUsers/ManageUsers';
 import AdminRoutes from './AdminRoutes';
 import AdminAnalytics from '../Pages/Dashboard/AdminAnalytics/AdminAnalytics';
+import PaymentSuccess from '../Pages/Payment/PaymentSuccess';
 
 export const router = createBrowserRouter([
     {
@@ -59,6 +60,10 @@ export const router = createBrowserRouter([
             {
                 index:true,
                 element: <AdminRoutes><AdminAnalytics></AdminAnalytics></AdminRoutes>
+            },
+            {
+                path:"payment-success",
+                Component:PaymentSuccess
             },
             {
                 path: "add-scholarship",
