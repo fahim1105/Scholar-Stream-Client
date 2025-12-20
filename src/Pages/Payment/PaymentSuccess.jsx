@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams, Link } from "react-router";
 import { BsCheckCircleFill } from "react-icons/bs";
 import { FiCopy, FiCheck } from "react-icons/fi";
 import UseAxiosSecure from "../../Hooks/UseAxiosSecure";

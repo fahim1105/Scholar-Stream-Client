@@ -17,6 +17,7 @@ import ManageUsers from '../Pages/Dashboard/ManageUsers/ManageUsers';
 import AdminRoutes from './AdminRoutes';
 import AdminAnalytics from '../Pages/Dashboard/AdminAnalytics/AdminAnalytics';
 import PaymentSuccess from '../Pages/Payment/PaymentSuccess';
+import PaymentCancel from '../Pages/Payment/PaymentCancel';
 
 export const router = createBrowserRouter([
     {
@@ -64,6 +65,10 @@ export const router = createBrowserRouter([
             {
                 path:"payment-success",
                 Component:PaymentSuccess
+            },
+            {
+                path:"payment-cancelled",
+                Component:PaymentCancel
             },
             {
                 path: "add-scholarship",
