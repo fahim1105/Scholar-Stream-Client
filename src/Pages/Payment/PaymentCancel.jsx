@@ -35,13 +35,11 @@ const PaymentCancel = () => {
 
                 {/* Action Buttons */}
                 <div className="flex flex-col gap-4">
-                    <Link
-                        to="/dashboard/my-parcels"
-                        className="flex items-center justify-center gap-2 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-100 transition-all active:scale-[0.98]"
+                    <p
+                        className="flex items-center justify-center gap-2 w-full bg-base-300 text-base-100 font-bold py-4 rounded-xl shadow-lg shadow-indigo-100"
                     >
-                        <FiRefreshCw className="text-lg" />
-                        Try Payment Again
-                    </Link>
+                        Try Again after some time
+                    </p>
 
                     <Link
                         to="/"

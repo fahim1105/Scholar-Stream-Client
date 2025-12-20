@@ -4,6 +4,7 @@ import { PiPersonArmsSpreadDuotone } from "react-icons/pi";
 import { MdManageAccounts, MdWorkHistory } from "react-icons/md";
 import { SiNginxproxymanager } from "react-icons/si";
 import UseRole from '../Hooks/UseRole';
+import { CgProfile } from "react-icons/cg";
 
 
 const DashboardLayout = () => {
@@ -87,6 +88,22 @@ const DashboardLayout = () => {
                                         to="/dashboard/manage-scholarship">
                                         <SiNginxproxymanager className="my-1.5 inline-block size-4"> </SiNginxproxymanager >
                                         <span className="is-drawer-close:hidden">Manage Scholarship</span>
+                                    </NavLink>
+                                </li>
+
+                                {/* Admin Profile*/}
+                                <li>
+                                    <NavLink
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                                : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        }
+                                        data-tip="Profile"
+                                        to="/dashboard/admin-profile">
+                                        <CgProfile className="my-1.5 inline-block size-4"> </CgProfile >
+
+                                        <span className="is-drawer-close:hidden">Profile</span>
                                     </NavLink>
                                 </li>
                             </>
