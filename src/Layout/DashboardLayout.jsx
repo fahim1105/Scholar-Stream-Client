@@ -1,13 +1,14 @@
 import React from 'react';
 import { Link, NavLink, Outlet } from 'react-router';
 import { PiPersonArmsSpreadDuotone } from "react-icons/pi";
-import { MdWorkHistory } from "react-icons/md";
+import { MdManageAccounts, MdWorkHistory } from "react-icons/md";
 import { SiNginxproxymanager } from "react-icons/si";
 import UseRole from '../Hooks/UseRole';
 
 
 const DashboardLayout = () => {
     const { role } = UseRole()
+    console.log(role)
     return (
         <div className="drawer lg:drawer-open w-11/12 mx-auto">
             <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -40,38 +41,24 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
-                        {/* Add Scholarship*/}
-                        <li>
-                            <NavLink
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                        : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                }
-                                data-tip="Add Scholarship"
-                                to="/dashboard/add-scholarship">
-                                <PiPersonArmsSpreadDuotone className="my-1.5 inline-block size-4"> </PiPersonArmsSpreadDuotone >
-                                <span className="is-drawer-close:hidden">Add Scholarship</span>
-                            </NavLink>
-                        </li>
-
-                        {/* Manage Scholarship*/}
-                        <li>
-                            <NavLink
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                        : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                }
-                                data-tip="Manage Scholarship"
-                                to="/dashboard/manage-scholarship">
-                                <SiNginxproxymanager className="my-1.5 inline-block size-4"> </SiNginxproxymanager >
-                                <span className="is-drawer-close:hidden">Manage Scholarship</span>
-                            </NavLink>
-                        </li>
                         {
                             role === 'admin' &&
                             <>
+                                {/* Add Scholarship*/}
+                                <li>
+                                    <NavLink
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                                : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        }
+                                        data-tip="Add Scholarship"
+                                        to="/dashboard/add-scholarship">
+                                        <PiPersonArmsSpreadDuotone className="my-1.5 inline-block size-4"> </PiPersonArmsSpreadDuotone >
+                                        <span className="is-drawer-close:hidden">Add Scholarship</span>
+                                    </NavLink>
+                                </li>
+
                                 {/* Manage Users*/}
                                 <li>
                                     <NavLink
@@ -85,6 +72,21 @@ const DashboardLayout = () => {
                                         <MdManageAccounts className="my-1.5 inline-block size-4"> </MdManageAccounts >
 
                                         <span className="is-drawer-close:hidden">Manage Users</span>
+                                    </NavLink>
+                                </li>
+
+                                {/* Manage Scholarship*/}
+                                <li>
+                                    <NavLink
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                                : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        }
+                                        data-tip="Manage Scholarship"
+                                        to="/dashboard/manage-scholarship">
+                                        <SiNginxproxymanager className="my-1.5 inline-block size-4"> </SiNginxproxymanager >
+                                        <span className="is-drawer-close:hidden">Manage Scholarship</span>
                                     </NavLink>
                                 </li>
                             </>

@@ -14,6 +14,8 @@ import DashboardLayout from '../Layout/DashboardLayout';
 import AddScholarship from '../Pages/Dashboard/AddScholarship/AddScholarship';
 import ManageScholarship from '../Pages/Dashboard/ManageScholarship/ManageScholarship';
 import ManageUsers from '../Pages/Dashboard/ManageUsers/ManageUsers';
+import AdminRoutes from './AdminRoutes';
+import AdminAnalytics from '../Pages/Dashboard/AdminAnalytics/AdminAnalytics';
 
 export const router = createBrowserRouter([
     {
@@ -55,16 +57,23 @@ export const router = createBrowserRouter([
         element: <PrivetRoutes><DashboardLayout></DashboardLayout></PrivetRoutes>,
         children: [
             {
+                index:true,
+                element: <AdminRoutes><AdminAnalytics></AdminAnalytics></AdminRoutes>
+            },
+            {
                 path: "add-scholarship",
-                Component: AddScholarship
+                // Component: AddScholarship,
+                element: <AdminRoutes><AddScholarship></AddScholarship></AdminRoutes>
             },
             {
                 path: "manage-scholarship",
-                Component: ManageScholarship
+                // Component: ManageScholarship
+                element: <AdminRoutes><ManageScholarship></ManageScholarship></AdminRoutes>
             },
             {
                 path: 'manage-users',
-                Component: ManageUsers
+                // Component: ManageUsers
+                element:<AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
             }
             
 

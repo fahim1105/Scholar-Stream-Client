@@ -25,6 +25,14 @@ const ScholarshipDetails = () => {
         },
         enabled: !!id,
     });
+    const handleApply = async () => {
+        const res = await axiosSecure.post("/create-checkout-session", {
+            scholarshipId: scholarship._id
+        });
+
+        window.location.href = res.data.url; // 🔥 external redirect
+    };
+
 
     if (isScholarshipLoading || isReviewsLoading) return <Loader />;
 
@@ -141,7 +149,7 @@ const ScholarshipDetails = () => {
                                 <SummaryItem label="Official Email" value={scholarship.postedUserEmail} />
                             </div>
                             <button
-                                onClick={() => navigate(`/checkout/${scholarship._id}`)}
+                                onClick={handleApply}
                                 className="w-full btn btn-primary btn-lg rounded-2xl h-16 text-lg font-black shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95"
                             >
                                 Apply for Scholarship
