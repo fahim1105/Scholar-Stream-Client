@@ -13,14 +13,13 @@ import ScholarshipDetails from '../Pages/ScholarshipDetails/ScholarshipDetails';
 import DashboardLayout from '../Layout/DashboardLayout';
 import AddScholarship from '../Pages/Dashboard/AddScholarship/AddScholarship';
 import ManageScholarship from '../Pages/Dashboard/ManageScholarship/ManageScholarship';
-import ManageUsers from '../Pages/Dashboard/ManageUsers/ManageUsers';
 import AdminRoutes from './AdminRoutes';
 import AdminAnalytics from '../Pages/Dashboard/AdminAnalytics/AdminAnalytics';
 import PaymentSuccess from '../Pages/Payment/PaymentSuccess';
 import PaymentCancel from '../Pages/Payment/PaymentCancel';
 import AdminProfile from '../Pages/Dashboard/AdminProfile/AdminProfile';
 import PaymentHistory from '../Pages/Payment/PaymentHistory';
-import MyApplication from '../Pages/Dashboard/MyApplication/MyApplication';
+import ManageUsers from '../Pages/Dashboard/ManageUsers/ManageUser';
 
 export const router = createBrowserRouter([
     {
@@ -76,10 +75,6 @@ export const router = createBrowserRouter([
             {
                 path: "payment-history",
                 Component: PaymentHistory
-            },
-            {
-                path: "my-application",
-                Component: MyApplication
             },
             {
                 path: "add-scholarship",

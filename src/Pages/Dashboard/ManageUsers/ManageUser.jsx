@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
+
+import { RiDeleteBin5Fill } from "react-icons/ri";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import Loader from "../../../Components/Loader/Loader";
-import { RiDeleteBin5Fill } from "react-icons/ri";
 
 const ManageUsers = () => {
     const axiosSecure = UseAxiosSecure();
@@ -50,7 +51,7 @@ const ManageUsers = () => {
             confirmButtonText: "Yes, change",
         }).then(async (result) => {
             if (result.isConfirmed) {
-                const res = await axiosSecure.patch(`/users/role/${user._id}`,{ role: newRole } );
+                const res = await axiosSecure.patch(`/users/role/${user._id}`, { role: newRole });
 
                 if (res.data.modifiedCount > 0) {
                     Swal.fire("Success!", "User role updated", "success");
