@@ -1,8 +1,10 @@
 import React from 'react';
-import UseAuth from '../../../Hooks/UseAuth';
-import UseAxiosSecure from '../../../Hooks/UseAxiosSecure';
+
 import { useQuery } from '@tanstack/react-query'
 import Swal from 'sweetalert2';
+import UseAuth from '../../Hooks/UseAuth';
+import UseAxiosSecure from '../../Hooks/UseAxiosSecure';
+import { Trash2 } from 'lucide-react';
 
 
 const PaymentHistory = () => {
@@ -19,7 +21,7 @@ const PaymentHistory = () => {
     })
     // console.log(payments);
 
-    const handleDeletePayment = () => {
+    const handleDeletePaymentAll = () => {
         Swal.fire({
             title: 'Are you sure?',
             text: "This will delete all payment history!",
@@ -52,12 +54,45 @@ const PaymentHistory = () => {
         });
     };
 
+    const handleDeletePayment = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will delete this payment history!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete all !'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axiosSecure.delete(`/payments/${id}`)
+                    .then(res => {
+                        if (res.data.deletedCount > 0) {
+                            Swal.fire(
+                                'Deleted!',
+                                'Delete.',
+                                'success'
+                            );
+                            paymentsRefetch(); // refetch payment history
+                        }
+                    })
+                    .catch(() => {
+                        Swal.fire(
+                            'Error!',
+                            'Something went wrong.',
+                            'error'
+                        );
+                    });
+            }
+        });
+    };
+
 
     return (
         <div>
             <h1 className="text-5xl"> Payment History: {payments.length}</h1>
             <button
-                onClick={handleDeletePayment}
+                onClick={handleDeletePaymentAll}
                 className='btn bg-red-400 hover:bg-red-500 text-white px-3 py-1 my-5'>
                 Delete All
             </button>
@@ -71,13 +106,14 @@ const PaymentHistory = () => {
                             <th>Amount</th>
                             <th>Transaction ID</th>
                             <th>Paid At</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
                             payments.map((payment, index) => <tr key={payment._id}>
                                 <th>{index + 1}</th>
-                                <td>{payment.parcelName}</td>
+                                <td>{payment.scholarshipName}</td>
                                 <td>${payment.amount}</td>
                                 <td>{payment.transactionId}</td>
                                 <td>
@@ -90,6 +126,11 @@ const PaymentHistory = () => {
                                         second: "2-digit",
                                         hour12: true
                                     })}
+                                </td>
+                                <td>
+                                    <button onClick={() => handleDeletePayment(payment._id)} className='btn btn-square bg-red-400 hover:bg-red-500'>
+                                        <Trash2 />
+                                    </button>
                                 </td>
                             </tr>)
                         }

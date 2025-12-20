@@ -5,7 +5,7 @@ import { MdManageAccounts, MdWorkHistory } from "react-icons/md";
 import { SiNginxproxymanager } from "react-icons/si";
 import UseRole from '../Hooks/UseRole';
 import { CgProfile } from "react-icons/cg";
-
+import { VscGitStashApply } from "react-icons/vsc";
 
 const DashboardLayout = () => {
     const { role } = UseRole()
@@ -122,6 +122,22 @@ const DashboardLayout = () => {
                                 <MdWorkHistory className="my-1.5 inline-block size-4"> </MdWorkHistory >
 
                                 <span className="is-drawer-close:hidden">Payment History</span>
+                            </NavLink>
+                        </li>
+
+                        {/* My Application */}
+                        <li>
+                            <NavLink
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                }
+                                data-tip="My Application"
+                                to="/dashboard/my-application">
+                                <VscGitStashApply className="my-1.5 inline-block size-4"> </VscGitStashApply >
+
+                                <span className="is-drawer-close:hidden">My Application</span>
                             </NavLink>
                         </li>
 

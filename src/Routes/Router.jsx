@@ -19,6 +19,8 @@ import AdminAnalytics from '../Pages/Dashboard/AdminAnalytics/AdminAnalytics';
 import PaymentSuccess from '../Pages/Payment/PaymentSuccess';
 import PaymentCancel from '../Pages/Payment/PaymentCancel';
 import AdminProfile from '../Pages/Dashboard/AdminProfile/AdminProfile';
+import PaymentHistory from '../Pages/Payment/PaymentHistory';
+import MyApplication from '../Pages/Dashboard/MyApplication/MyApplication';
 
 export const router = createBrowserRouter([
     {
@@ -60,16 +62,24 @@ export const router = createBrowserRouter([
         element: <PrivetRoutes><DashboardLayout></DashboardLayout></PrivetRoutes>,
         children: [
             {
-                index:true,
+                index: true,
                 element: <AdminRoutes><AdminAnalytics></AdminAnalytics></AdminRoutes>
             },
             {
-                path:"payment-success",
-                Component:PaymentSuccess
+                path: "payment-success",
+                Component: PaymentSuccess
             },
             {
-                path:"payment-cancelled",
-                Component:PaymentCancel
+                path: "payment-cancelled",
+                Component: PaymentCancel
+            },
+            {
+                path: "payment-history",
+                Component: PaymentHistory
+            },
+            {
+                path: "my-application",
+                Component: MyApplication
             },
             {
                 path: "add-scholarship",
@@ -84,13 +94,13 @@ export const router = createBrowserRouter([
             {
                 path: 'manage-users',
                 // Component: ManageUsers
-                element:<AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
+                element: <AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
             },
             {
                 path: 'admin-profile',
-                element:<AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
+                element: <AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
             }
-            
+
 
         ]
     }
