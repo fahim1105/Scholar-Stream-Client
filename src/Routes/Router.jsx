@@ -25,6 +25,7 @@ import ModeratorProfile from '../Pages/Dashboard/ModeratorDashboard/ModeratorPro
 // import ModeratorApplications from '../Pages/Dashboard/ModeratorDashboard/ModeratorApplications/ModeratorApplications';
 import ManageReviews from '../Pages/Dashboard/ModeratorDashboard/ManageReviews/ManageReviews';
 import Analytics from '../Pages/Dashboard/Analytics/Analytics';
+import UserProfile from '../Pages/Dashboard/UserDashboard/UserProfile/UserProfile';
 
 export const router = createBrowserRouter([
     {
@@ -83,6 +84,10 @@ export const router = createBrowserRouter([
                 Component: PaymentHistory
             },
             {
+                path: "student-profile",
+                Component: UserProfile
+            },
+            {
                 path: "add-scholarship",
                 // Component: AddScholarship,
                 element: <AdminRoutes><AddScholarship></AddScholarship></AdminRoutes>
@@ -102,16 +107,16 @@ export const router = createBrowserRouter([
                 element: <AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
             },
             {
-                path:"moderator-profile",
-                element:<ModeratorRoutes><ModeratorProfile></ModeratorProfile></ModeratorRoutes>
+                path: "moderator-profile",
+                element: <ModeratorRoutes><ModeratorProfile></ModeratorProfile></ModeratorRoutes>
             },
             // {
             //     path:"moderator-applications",
             //     element:<ModeratorRoutes><ModeratorApplications></ModeratorApplications></ModeratorRoutes>
             // },
             {
-                path:"manage-reviews",
-                element:<ModeratorRoutes><ManageReviews></ManageReviews></ModeratorRoutes>
+                path: "manage-reviews",
+                element: <ModeratorRoutes><ManageReviews></ManageReviews></ModeratorRoutes>
             }
 
 
