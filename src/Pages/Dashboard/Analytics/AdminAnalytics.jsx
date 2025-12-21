@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import Loader from "../../../Components/Loader/Loader";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 const AdminAnalytics = () => {
     const axiosSecure = UseAxiosSecure();

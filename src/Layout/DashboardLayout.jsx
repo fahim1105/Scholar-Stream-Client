@@ -129,7 +129,7 @@ const DashboardLayout = () => {
                                     </NavLink>
                                 </li>
                                 {/* Moderator Applications */}
-                                <li>
+                                {/* <li>
                                     <NavLink
                                         className={({ isActive }) =>
                                             isActive
@@ -143,7 +143,7 @@ const DashboardLayout = () => {
 
                                         <span className="is-drawer-close:hidden">Moderator Applications</span>
                                     </NavLink>
-                                </li>
+                                </li> */}
 
                                 {/* Manage Reviews */}
                                 <li>

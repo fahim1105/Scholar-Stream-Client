@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-
-// প্রয়োজনীয় আইকনসমূহ
-import {
-    FaEye,
-    FaCommentDots,
-    FaBan,
-    FaUniversity,
-    FaUserGraduate,
-    FaCheckCircle,
-    FaTimesCircle
-} from "react-icons/fa";
+import { FaEye, FaCommentDots, FaBan, FaUniversity, FaUserGraduate, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { MdOutlinePendingActions, MdTimeline } from "react-icons/md";
 import UseAxiosSecure from "../../../../Hooks/UseAxiosSecure";
 import Loader from "../../../../Components/Loader/Loader";
@@ -23,7 +13,7 @@ const ModeratorApplications = () => {
     const [selectedApplication, setSelectedApplication] = useState(null);
     const [feedbackText, setFeedbackText] = useState("");
 
-    // ১. সকল অ্যাপ্লিকেশন ফেচ করা (applicationsCollection থেকে আসবে)
+    // 1. feetch all application from application collection
     const { data: applications = [], isLoading } = useQuery({
         queryKey: ["moderator-applications"],
         queryFn: async () => {
@@ -32,20 +22,22 @@ const ModeratorApplications = () => {
         }
     });
 
-    // ২. স্ট্যাটাস আপডেট মিউটেশন (ID ব্যবহার করে)
+    // 2. Status update mutation using ID
+    // learn mutation from homework of PH
+
     const statusMutation = useMutation({
         mutationFn: ({ id, status }) =>
             axiosSecure.patch(`/moderator/application-status/${id}`, { status }),
         onSuccess: () => {
             toast.success("Status updated successfully!");
-            queryClient.invalidateQueries({ queryKey: ["moderator-applications"] });
+            queryClient.invalidateQueries({ queryKey: ["moderator-applications"] }); // learn form gpt
         },
         onError: () => {
             toast.error("Failed to update status");
         }
     });
 
-    // ৩. ফিডব্যাক মিউটেশন (ID ব্যবহার করে)
+    // Feedback mutation using ID
     const feedbackMutation = useMutation({
         mutationFn: ({ id, feedback }) =>
             axiosSecure.patch(`/moderator/application-feedback/${id}`, { feedback }),
@@ -120,7 +112,8 @@ const ModeratorApplications = () => {
                                             {/* Details */}
                                             <label
                                                 htmlFor="details-modal"
-                                                className="btn btn-square btn-sm btn-info text-white shadow-md hover:scale-110 transition-transform"
+                                                data-tip="Details"
+                                                className="btn btn-square btn-sm btn-info text-white shadow-md hover:scale-110 transition-transform tooltip before:bg-base-300"
                                                 onClick={() => setSelectedApplication(app)}
                                                 title="Details"
                                             >
@@ -130,7 +123,8 @@ const ModeratorApplications = () => {
                                             {/* Feedback */}
                                             <label
                                                 htmlFor="feedback-modal"
-                                                className="btn btn-square btn-sm btn-warning text-white shadow-md hover:scale-110 transition-transform"
+                                                data-tip="Feedback"
+                                                className="btn btn-square btn-sm btn-warning text-white shadow-md hover:scale-110 transition-transform tooltip before:bg-base-300"
                                                 onClick={() => {
                                                     setSelectedApplication(app);
                                                     setFeedbackText(app.feedback || "");
@@ -156,7 +150,8 @@ const ModeratorApplications = () => {
 
                                             {/* Cancel/Reject Button */}
                                             <button
-                                                className="btn btn-square btn-sm btn-error text-white shadow-md hover:scale-110 transition-transform"
+                                                data-tip="Reject"
+                                                className="btn btn-square btn-sm btn-error text-white shadow-md hover:scale-110 transition-transform tooltip before:bg-base-300"
                                                 onClick={() => {
                                                     if (window.confirm("Reject this application?")) {
                                                         statusMutation.mutate({
