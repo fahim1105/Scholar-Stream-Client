@@ -135,7 +135,7 @@ const PaymentHistory = () => {
                                             <td className="text-center">
                                                 <button
                                                     onClick={() => handleDeletePayment(payment._id)}
-                                                    className="btn btn-circle btn-ghost text-error hover:bg-error/10 opacity-0 group-hover:opacity-100 transition-all"
+                                                    className="btn btn-circle btn-ghost text-error hover:bg-error/10 opacity-100 md:group-hover:opacity-100 transition-all"
                                                 >
                                                     <Trash2 size={20} />
                                                 </button>
