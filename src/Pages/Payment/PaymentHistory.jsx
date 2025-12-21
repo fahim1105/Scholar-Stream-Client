@@ -62,7 +62,7 @@ const PaymentHistory = () => {
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete all !'
+            confirmButtonText: 'Yes, delete!'
         }).then((result) => {
             if (result.isConfirmed) {
                 axiosSecure.delete(`/payments/${id}`)

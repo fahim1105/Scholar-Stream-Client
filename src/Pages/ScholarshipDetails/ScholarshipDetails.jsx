@@ -3,11 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import UseAxiosSecure from "../../Hooks/UseAxiosSecure";
 import Loader from "../../Components/Loader/Loader";
 import { FaGlobe, FaGraduationCap, FaCalendarAlt, FaDollarSign, FaLanguage, FaAward, FaUniversity } from "react-icons/fa";
+import UseAuth from "../../Hooks/UseAuth";
+import toast from "react-hot-toast";
 
 const ScholarshipDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const axiosSecure = UseAxiosSecure();
+    const {user} = UseAuth();
 
     const { data: scholarship = {}, isLoading: isScholarshipLoading } = useQuery({
         queryKey: ["scholarship-details", id],
@@ -25,12 +28,35 @@ const ScholarshipDetails = () => {
         },
         enabled: !!id,
     });
-    const handleApply = async () => {
-        const res = await axiosSecure.post("/create-checkout-session", {
-            scholarshipId: scholarship._id
-        });
+    // const handleApply = async () => {
+    //     const res = await axiosSecure.post("/create-checkout-session", {
+    //         scholarshipId: scholarship._id
+    //     });
 
-        window.location.href = res.data.url; // 🔥 external redirect
+    //     window.location.href = res.data.url; // 🔥 external redirect
+    // };
+
+    const handleApply = async () => {
+        if (!user) {
+            return toast.error("Please login to apply");
+        }
+
+        try {
+            const res = await axiosSecure.post("/create-checkout-session", {
+                scholarshipId: scholarship._id,
+                scholarshipName: scholarship.scholarshipName,
+                universityName: scholarship.universityName,
+                userName: user?.displayName,
+                userEmail: user?.email
+            });
+
+            if (res.data.url) {
+                window.location.href = res.data.url;
+            }
+        } catch (error) {
+            console.error("Payment Error", error);
+            toast.error("Something went wrong!");
+        }
     };
 
 

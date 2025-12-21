@@ -20,6 +20,10 @@ import PaymentCancel from '../Pages/Payment/PaymentCancel';
 import AdminProfile from '../Pages/Dashboard/AdminProfile/AdminProfile';
 import PaymentHistory from '../Pages/Payment/PaymentHistory';
 import ManageUsers from '../Pages/Dashboard/ManageUsers/ManageUser';
+import ModeratorRoutes from './ModeratorRoutes';
+import ModeratorProfile from '../Pages/Dashboard/ModeratorDashboard/ModeratorProfile/ModeratorProfile';
+import ModeratorApplications from '../Pages/Dashboard/ModeratorDashboard/ModeratorApplications/ModeratorApplications';
+import ManageReviews from '../Pages/Dashboard/ModeratorDashboard/ManageReviews/ManageReviews';
 
 export const router = createBrowserRouter([
     {
@@ -94,6 +98,18 @@ export const router = createBrowserRouter([
             {
                 path: 'admin-profile',
                 element: <AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
+            },
+            {
+                path:"moderator-profile",
+                element:<ModeratorRoutes><ModeratorProfile></ModeratorProfile></ModeratorRoutes>
+            },
+            {
+                path:"moderator-applications",
+                element:<ModeratorRoutes><ModeratorApplications></ModeratorApplications></ModeratorRoutes>
+            },
+            {
+                path:"manage-reviews",
+                element:<ModeratorRoutes><ManageReviews></ManageReviews></ModeratorRoutes>
             }
 
 

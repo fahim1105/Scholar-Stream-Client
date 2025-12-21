@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link, NavLink, Outlet } from 'react-router';
 import { PiPersonArmsSpreadDuotone } from "react-icons/pi";
-import { MdManageAccounts, MdWorkHistory } from "react-icons/md";
+import { MdManageAccounts, MdRateReview, MdWorkHistory } from "react-icons/md";
 import { SiNginxproxymanager } from "react-icons/si";
 import UseRole from '../Hooks/UseRole';
 import { CgProfile } from "react-icons/cg";
-import { VscGitStashApply } from "react-icons/vsc";
+import { VscFeedback } from "react-icons/vsc";
+
 
 const DashboardLayout = () => {
     const { role } = UseRole()
@@ -101,6 +102,79 @@ const DashboardLayout = () => {
                                         }
                                         data-tip="Profile"
                                         to="/dashboard/admin-profile">
+                                        <CgProfile className="my-1.5 inline-block size-4"> </CgProfile >
+
+                                        <span className="is-drawer-close:hidden">Profile</span>
+                                    </NavLink>
+                                </li>
+                            </>
+                        }
+
+                        {
+                            role === 'moderator' &&
+                            <>
+                                {/* Moderator Profile*/}
+                                <li>
+                                    <NavLink
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                                : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        }
+                                        data-tip="Profile"
+                                        to="/dashboard/moderator-profile">
+                                        <CgProfile className="my-1.5 inline-block size-4"> </CgProfile >
+
+                                        <span className="is-drawer-close:hidden">Profile</span>
+                                    </NavLink>
+                                </li>
+                                {/* Moderator Applications */}
+                                <li>
+                                    <NavLink
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                                : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        }
+                                        data-tip="Moderator Applications"
+                                        to="/dashboard/moderator-applications">
+                                        <VscFeedback className="my-1.5 inline-block size-4"> </VscFeedback >
+
+
+                                        <span className="is-drawer-close:hidden">Moderator Applications</span>
+                                    </NavLink>
+                                </li>
+
+                                {/* Manage Reviews */}
+                                <li>
+                                    <NavLink
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                                : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        }
+                                        data-tip="Manage Review"
+                                        to="/dashboard/manage-reviews">
+                                        <MdRateReview className="my-1.5 inline-block size-4"> </MdRateReview >
+
+                                        <span className="is-drawer-close:hidden">Manage Reviews </span>
+                                    </NavLink>
+                                </li>
+                            </>
+                        }
+                        {
+                            role === 'student' &&
+                            <>
+                                {/* Moderator Profile*/}
+                                <li>
+                                    <NavLink
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                                : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        }
+                                        data-tip="Profile"
+                                        to="/dashboard/moderator-profile">
                                         <CgProfile className="my-1.5 inline-block size-4"> </CgProfile >
 
                                         <span className="is-drawer-close:hidden">Profile</span>
