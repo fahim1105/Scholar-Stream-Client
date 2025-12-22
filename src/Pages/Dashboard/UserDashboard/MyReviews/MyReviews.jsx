@@ -7,7 +7,6 @@ import { Pencil, Trash2, Star, XCircle, StarHalf } from 'lucide-react';
 import UseAxiosSecure from '../../../../Hooks/UseAxiosSecure';
 import Loader from '../../../../Components/Loader/Loader';
 import { motion, AnimatePresence } from "framer-motion";
-// import { X, Star } from "lucide-react";
 
 const MyReviews = () => {
     const axiosSecure = UseAxiosSecure();
@@ -15,7 +14,6 @@ const MyReviews = () => {
     const [editingReview, setEditingReview] = useState(null);
     const { register, handleSubmit, setValue } = useForm();
 
-    // ইউজারের রিভিউ ডাটা ফেচ করা
     const { data: reviews = [], isLoading, refetch } = useQuery({
         queryKey: ['my-reviews'],
         queryFn: async () => {
@@ -24,7 +22,6 @@ const MyReviews = () => {
         }
     });
 
-    // ডিলিট লজিক
     const handleDelete = (id) => {
         Swal.fire({
             title: "Are you sure?",
@@ -44,7 +41,6 @@ const MyReviews = () => {
         });
     };
 
-    // এডিট মডাল ওপেন
     const openEditModal = (review) => {
         setEditingReview(review);
         setValue("rating", review.rating);
@@ -52,7 +48,6 @@ const MyReviews = () => {
         setIsEditModalOpen(true);
     };
 
-    // এডিট সাবমিট (ব্যাকএন্ডে PATCH/PUT রাউট থাকতে হবে)
     const onEditSubmit = async (data) => {
         try {
             const res = await axiosSecure.patch(`/reviews/${editingReview._id}`, data);
