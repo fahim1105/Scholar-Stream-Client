@@ -3,13 +3,18 @@ import { Menu, X, LogOut, LayoutDashboard, ChevronRight, User } from "lucide-rea
 import logo from "../../assets/logo.png";
 import { Link, NavLink } from "react-router";
 import UseAuth from "../../Hooks/UseAuth";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
     const { user, signOutUser } = UseAuth();
     const [open, setOpen] = useState(false);
 
     const handleSignOut = () => {
-        signOutUser().catch((error) => console.error(error));
+        signOutUser()
+            .then(() => {
+                toast.success("Logout successful")
+            })
+            .catch((error) => console.error(error));
         setOpen(false);
     }
 
@@ -19,9 +24,8 @@ const Navbar = () => {
     ];
 
     const linkStyles = ({ isActive }) =>
-        `px-4 py-2 rounded-full transition-all duration-300 font-medium text-sm flex items-center gap-1 ${
-            isActive 
-            ? "bg-primary text-white shadow-md" 
+        `px-4 py-2 rounded-full transition-all duration-300 font-medium text-sm flex items-center gap-1 ${isActive
+            ? "bg-primary text-white shadow-md"
             : "text-gray-600 hover:bg-gray-100 hover:text-primary"
         }`;
 
@@ -60,9 +64,9 @@ const Navbar = () => {
                                     <p className="text-xs font-bold text-gray-800 leading-none">{user?.displayName || "User"}</p>
                                     <button onClick={handleSignOut} className="text-[10px] text-red-500 font-bold uppercase hover:underline">Sign Out</button>
                                 </div>
-                                <img 
-                                    src={user?.photoURL || `https://ui-avatars.com/api/?name=${user?.displayName || 'User'}&background=random`} 
-                                    alt="Profile" 
+                                <img
+                                    src={user?.photoURL || `https://ui-avatars.com/api/?name=${user?.displayName || 'User'}&background=random`}
+                                    alt="Profile"
                                     className="w-10 h-10 rounded-full border-2 border-primary p-0.5 object-cover"
                                 />
                             </div>
@@ -83,7 +87,7 @@ const Navbar = () => {
 
             {/* Mobile Sidebar */}
             <div className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-50 lg:hidden transition-opacity duration-300 ${open ? "opacity-100 visible" : "opacity-0 invisible"}`} onClick={() => setOpen(false)} />
-            
+
             <aside className={`fixed top-0 right-0 h-full w-[280px] bg-white z-[60] shadow-2xl lg:hidden transform transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"}`}>
                 <div className="p-6 flex flex-col h-full">
                     <div className="flex justify-between items-center mb-8 border-b pb-4">

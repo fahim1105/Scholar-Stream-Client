@@ -26,6 +26,8 @@ import ModeratorRoutes from './ModeratorRoutes';
 import ManageReviews from '../Pages/Dashboard/ModeratorDashboard/ManageReviews/ManageReviews';
 import Analytics from '../Pages/Dashboard/Analytics/Analytics';
 import UserProfile from '../Pages/Dashboard/UserDashboard/UserProfile/UserProfile';
+import MyApplications from '../Pages/Dashboard/UserDashboard/MyApplications/MyApplications';
+import MyReviews from '../Pages/Dashboard/UserDashboard/MyReviews/MyReviews';
 
 export const router = createBrowserRouter([
     {
@@ -88,32 +90,25 @@ export const router = createBrowserRouter([
                 Component: UserProfile
             },
             {
+                path: "my-reviews",
+                Component: MyReviews
+            },
+            {
                 path: "add-scholarship",
-                // Component: AddScholarship,
                 element: <AdminRoutes><AddScholarship></AddScholarship></AdminRoutes>
             },
             {
                 path: "manage-scholarship",
-                // Component: ManageScholarship
                 element: <AdminRoutes><ManageScholarship></ManageScholarship></AdminRoutes>
             },
             {
+                path: "my-applications",
+                Component: MyApplications
+            },
+            {
                 path: 'manage-users',
-                // Component: ManageUsers
                 element: <AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
             },
-            // {
-            //     path: 'admin-profile',
-            //     element: <AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
-            // },
-            // {
-            //     path: "moderator-profile",
-            //     element: <ModeratorRoutes><ModeratorProfile></ModeratorProfile></ModeratorRoutes>
-            // },
-            // {
-            //     path:"moderator-applications",
-            //     element:<ModeratorRoutes><ModeratorApplications></ModeratorApplications></ModeratorRoutes>
-            // },
             {
                 path: "manage-reviews",
                 element: <ModeratorRoutes><ManageReviews></ManageReviews></ModeratorRoutes>

@@ -10,7 +10,7 @@ const ScholarshipDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const axiosSecure = UseAxiosSecure();
-    const {user} = UseAuth();
+    const { user } = UseAuth();
 
     const { data: scholarship = {}, isLoading: isScholarshipLoading } = useQuery({
         queryKey: ["scholarship-details", id],
@@ -21,20 +21,13 @@ const ScholarshipDetails = () => {
     });
 
     const { data: reviews = [], isLoading: isReviewsLoading } = useQuery({
-        queryKey: ["reviews", id],
+        queryKey: ["scholarship-reviews", id],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/reviews?scholarshipId=${id}`);
+            const res = await axiosSecure.get(`/scholarship-reviews/${id}`);
             return res.data;
         },
         enabled: !!id,
     });
-    // const handleApply = async () => {
-    //     const res = await axiosSecure.post("/create-checkout-session", {
-    //         scholarshipId: scholarship._id
-    //     });
-
-    //     window.location.href = res.data.url; // 🔥 external redirect
-    // };
 
     const handleApply = async () => {
         if (!user) {
@@ -201,15 +194,19 @@ const ScholarshipDetails = () => {
                                 <div className="flex items-center gap-5 mb-6">
                                     <div className="avatar">
                                         <div className="w-16 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                                            <img src={review.userImage || "https://i.ibb.co/4pDNDk1/avatar.png"} />
+                                            <img src={review.reviewerPhoto}
+                                                alt={review.reviewerName} />
                                         </div>
                                     </div>
                                     <div>
-                                        <h4 className="font-bold text-neutral-800 text-xl">{review.userName}</h4>
+                                        <h4 className="font-bold text-neutral-800 text-xl">{review.reviewerName}</h4>
                                         <div className="flex text-amber-400 mt-1">
                                             {"★".repeat(Number(review.rating))}
                                             <span className="text-base-300">{"★".repeat(5 - Number(review.rating))}</span>
                                         </div>
+                                        <p className="text-xs text-neutral-400 mt-1">
+                                            {new Date(review.createdAt).toLocaleDateString()}
+                                        </p>
                                     </div>
                                 </div>
                                 <p className="text-neutral-500 leading-relaxed italic text-lg bg-base-50 p-6 rounded-2xl">

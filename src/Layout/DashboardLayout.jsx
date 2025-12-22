@@ -5,8 +5,8 @@ import { MdManageAccounts, MdRateReview, MdWorkHistory } from "react-icons/md";
 import { SiNginxproxymanager } from "react-icons/si";
 import UseRole from '../Hooks/UseRole';
 import { CgProfile } from "react-icons/cg";
-import { VscFeedback } from "react-icons/vsc";
-import { ClipboardList } from 'lucide-react';
+import { ClipboardList, LayoutDashboard } from 'lucide-react';
+import { MessageCircleCode } from 'lucide-react';
 
 
 const DashboardLayout = () => {
@@ -117,7 +117,7 @@ const DashboardLayout = () => {
                         }
 
 
-                        {/* Student Profile*/}
+                        {/*Profile*/}
                         <li>
                             <NavLink
                                 className={({ isActive }) =>
@@ -130,6 +130,21 @@ const DashboardLayout = () => {
                                 <CgProfile className="my-1.5 inline-block size-4"> </CgProfile >
 
                                 <span className="is-drawer-close:hidden">Profile</span>
+                            </NavLink>
+                        </li>
+
+                        {/* My Application */}
+                        <li>
+                            <NavLink
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                }
+                                data-tip="Manage Application"
+                                to="/dashboard/my-applications">
+                                <ClipboardList className="my-1.5 inline-block size-4"> </ClipboardList >
+                                <span className="is-drawer-close:hidden">My Application</span>
                             </NavLink>
                         </li>
 
@@ -149,7 +164,23 @@ const DashboardLayout = () => {
                             </NavLink>
                         </li>
 
-                        {/* List item */}
+                        {/* Review History */}
+                        <li>
+                            <NavLink
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                        : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
+                                }
+                                data-tip="My Reviews"
+                                to="/dashboard/my-reviews">
+                                <MessageCircleCode className="my-1.5 inline-block size-4"> </MessageCircleCode >
+
+                                <span className="is-drawer-close:hidden">My Reviews</span>
+                            </NavLink>
+                        </li>
+
+                        {/* Dashboard */}
                         <li>
                             <NavLink
                                 className={({ isActive }) =>
@@ -157,12 +188,13 @@ const DashboardLayout = () => {
                                         ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block "
                                         : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block"
                                 }
-                                to="/#">
+                                to="/dashboard">
 
                                 <button className="is-drawer-close:tooltip is-drawer-close:tooltip-right before:bg-gray-900 " data-tip="Settings">
                                     {/* Settings icon */}
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>
-                                    <span className="is-drawer-close:hidden">Settings</span>
+                                    <LayoutDashboard />
+
+                                    <span className="is-drawer-close:hidden">Dashboard</span>
                                 </button>
                             </NavLink>
 

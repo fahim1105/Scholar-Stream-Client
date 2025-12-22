@@ -5,6 +5,7 @@ import { FaEye, FaCommentDots, FaBan, FaUniversity, FaUserGraduate, FaCheckCircl
 import { MdOutlinePendingActions, MdTimeline } from "react-icons/md";
 import UseAxiosSecure from "../../../../Hooks/UseAxiosSecure";
 import Loader from "../../../../Components/Loader/Loader";
+import Swal from "sweetalert2";
 
 const ModeratorApplications = () => {
     const axiosSecure = UseAxiosSecure();
@@ -51,6 +52,31 @@ const ModeratorApplications = () => {
             toast.error("Failed to save feedback");
         }
     });
+
+    const handleReject = (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you really want to reject this application?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444", // Red color for reject
+            cancelButtonColor: "#64748b",
+            confirmButtonText: "Yes, reject it!",
+            cancelButtonText: "No, cancel",
+            reverseButtons: true,
+            background: "#ffffff",
+            customClass: {
+                popup: 'rounded-[2rem]',
+                confirmButton: 'rounded-xl',
+                cancelButton: 'rounded-xl'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // আপনার mutation কল করা হচ্ছে
+                statusMutation.mutate({ id: id, status: "rejected" });
+            }
+        });
+    };
 
     if (isLoading) return <Loader />;
 
@@ -149,21 +175,16 @@ const ModeratorApplications = () => {
                                             </select>
 
                                             {/* Cancel/Reject Button */}
-                                            <button
-                                                data-tip="Reject"
-                                                className="btn btn-square btn-sm btn-error text-white shadow-md hover:scale-110 transition-transform tooltip before:bg-base-300"
-                                                onClick={() => {
-                                                    if (window.confirm("Reject this application?")) {
-                                                        statusMutation.mutate({
-                                                            id: app._id,
-                                                            status: "rejected"
-                                                        })
-                                                    }
-                                                }}
-                                                title="Reject"
-                                            >
-                                                <FaBan />
-                                            </button>
+                                            {app.status !== 'rejected' && (
+                                                <button
+                                                    data-tip="Reject"
+                                                    className="btn btn-square btn-sm btn-error text-white shadow-md hover:scale-110 transition-transform tooltip before:bg-base-300"
+                                                    onClick={() => handleReject(app._id)}
+                                                    title="Reject"
+                                                >
+                                                    <FaBan />
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
