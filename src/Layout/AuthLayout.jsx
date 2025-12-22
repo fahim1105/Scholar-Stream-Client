@@ -14,11 +14,11 @@ const AuthLayout = () => {
                     </span>
                 </div>
             </Link>
-            <div className='flex items-center'>
-                <div className='flex-1'>
+            <div className='md:flex md:items-center'>
+                <div className='md:flex-1'>
                     <Outlet></Outlet>
                 </div>
-                <div className='flex-1'>
+                <div className='flex-1 hidden md:block'>
                     <img src={AuthIMG} alt="" />
                 </div>
             </div>
