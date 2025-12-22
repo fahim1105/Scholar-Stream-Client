@@ -92,44 +92,12 @@ const DashboardLayout = () => {
                                         <span className="is-drawer-close:hidden">Manage Scholarship</span>
                                     </NavLink>
                                 </li>
-
-                                {/* Admin Profile*/}
-                                <li>
-                                    <NavLink
-                                        className={({ isActive }) =>
-                                            isActive
-                                                ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                                : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                        }
-                                        data-tip="Profile"
-                                        to="/dashboard/admin-profile">
-                                        <CgProfile className="my-1.5 inline-block size-4"> </CgProfile >
-
-                                        <span className="is-drawer-close:hidden">Profile</span>
-                                    </NavLink>
-                                </li>
                             </>
                         }
 
                         {
                             role === 'moderator' &&
                             <>
-                                {/* Moderator Profile*/}
-                                <li>
-                                    <NavLink
-                                        className={({ isActive }) =>
-                                            isActive
-                                                ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                                : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                        }
-                                        data-tip="Profile"
-                                        to="/dashboard/moderator-profile">
-                                        <CgProfile className="my-1.5 inline-block size-4"> </CgProfile >
-
-                                        <span className="is-drawer-close:hidden">Profile</span>
-                                    </NavLink>
-                                </li>
-
                                 {/* Manage Reviews */}
                                 <li>
                                     <NavLink
@@ -158,29 +126,12 @@ const DashboardLayout = () => {
                                         : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
                                 }
                                 data-tip="Profile"
-                                to="/dashboard/student-profile">
+                                to="/dashboard/profile">
                                 <CgProfile className="my-1.5 inline-block size-4"> </CgProfile >
 
                                 <span className="is-drawer-close:hidden">Profile</span>
                             </NavLink>
                         </li>
-
-                        {/* My Applications */}
-                        <li>
-                            <NavLink
-                                className={({ isActive }) =>
-                                    isActive
-                                        ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                        : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
-                                }
-                                data-tip="My Applications"
-                                to="/dashboard/my-applications">
-                                <ClipboardList className="my-1.5 inline-block size-4"> </ClipboardList >
-
-                                <span className="is-drawer-close:hidden">My Applications</span>
-                            </NavLink>
-                        </li>
-
 
                         {/* Payment History */}
                         <li>

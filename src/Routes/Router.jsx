@@ -17,11 +17,11 @@ import AdminRoutes from './AdminRoutes';
 // import AdminAnalytics from '../Pages/Dashboard/Analytics/Analytics';
 import PaymentSuccess from '../Pages/Payment/PaymentSuccess';
 import PaymentCancel from '../Pages/Payment/PaymentCancel';
-import AdminProfile from '../Pages/Dashboard/AdminProfile/AdminProfile';
+// import AdminProfile from '../Pages/Dashboard/AdminProfile/AdminProfile';
 import PaymentHistory from '../Pages/Payment/PaymentHistory';
 import ManageUsers from '../Pages/Dashboard/ManageUsers/ManageUser';
 import ModeratorRoutes from './ModeratorRoutes';
-import ModeratorProfile from '../Pages/Dashboard/ModeratorDashboard/ModeratorProfile/ModeratorProfile';
+// import ModeratorProfile from '../Pages/Dashboard/ModeratorDashboard/ModeratorProfile/ModeratorProfile';
 // import ModeratorApplications from '../Pages/Dashboard/ModeratorDashboard/ModeratorApplications/ModeratorApplications';
 import ManageReviews from '../Pages/Dashboard/ModeratorDashboard/ManageReviews/ManageReviews';
 import Analytics from '../Pages/Dashboard/Analytics/Analytics';
@@ -84,7 +84,7 @@ export const router = createBrowserRouter([
                 Component: PaymentHistory
             },
             {
-                path: "student-profile",
+                path: "profile",
                 Component: UserProfile
             },
             {
@@ -102,14 +102,14 @@ export const router = createBrowserRouter([
                 // Component: ManageUsers
                 element: <AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
             },
-            {
-                path: 'admin-profile',
-                element: <AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
-            },
-            {
-                path: "moderator-profile",
-                element: <ModeratorRoutes><ModeratorProfile></ModeratorProfile></ModeratorRoutes>
-            },
+            // {
+            //     path: 'admin-profile',
+            //     element: <AdminRoutes><AdminProfile></AdminProfile></AdminRoutes>
+            // },
+            // {
+            //     path: "moderator-profile",
+            //     element: <ModeratorRoutes><ModeratorProfile></ModeratorProfile></ModeratorRoutes>
+            // },
             // {
             //     path:"moderator-applications",
             //     element:<ModeratorRoutes><ModeratorApplications></ModeratorApplications></ModeratorRoutes>
