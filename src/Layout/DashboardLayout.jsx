@@ -134,14 +134,14 @@ const DashboardLayout = () => {
                         </li>
 
                         {/* My Application */}
-                        <li>
+                        <li className={role === 'student' ? "hidden":"block"}>
                             <NavLink
                                 className={({ isActive }) =>
                                     isActive
                                         ? "bg-primary text-accent is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
                                         : "hover:text-black is-drawer-close:tooltip is-drawer-close:tooltip-right block before:bg-gray-900"
                                 }
-                                data-tip="Manage Application"
+                                data-tip="My Application"
                                 to="/dashboard/my-applications">
                                 <ClipboardList className="my-1.5 inline-block size-4"> </ClipboardList >
                                 <span className="is-drawer-close:hidden">My Application</span>

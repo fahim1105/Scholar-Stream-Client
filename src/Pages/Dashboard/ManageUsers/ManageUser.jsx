@@ -64,7 +64,7 @@ const ManageUsers = () => {
     if (isLoading) return <Loader />;
 
     return (
-        <div className="p-6">
+        <div className="p-6 mb-15">
             <h2 className="text-3xl font-bold mb-6">Manage Users</h2>
 
             <div className="overflow-x-auto bg-base-100 rounded-xl shadow">
