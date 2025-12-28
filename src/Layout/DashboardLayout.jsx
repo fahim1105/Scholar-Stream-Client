@@ -8,10 +8,20 @@ import { CgProfile } from "react-icons/cg";
 import { ClipboardList, LayoutDashboard, Home, ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen, Menu } from 'lucide-react';
 import { MessageCircleCode } from 'lucide-react';
 import UseAuth from '../Hooks/UseAuth';
+import toast from 'react-hot-toast';
 
 const DashboardLayout = () => {
     const { role } = UseRole();
-    const { user, logOut } = UseAuth();
+    const { user, signOutUser } = UseAuth();
+
+    const handleSignOut = () => {
+        signOutUser()
+            .then(() => {
+                toast.success("Logout successful")
+            })
+            .catch((error) => console.error(error));
+    }
+
     // সাইডবার ছোট বড় করার জন্য স্টেট
     const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -21,10 +31,9 @@ const DashboardLayout = () => {
     return (
         <div className="flex min-h-screen bg-base-100 font-sans">
             {/* --- Premium Collapsible Sidebar --- */}
-            <aside 
-                className={`hidden lg:flex flex-col bg-base-100 border-r border-base-200 transition-all duration-300 ease-in-out sticky top-0 h-screen z-40 ${
-                    isCollapsed ? "w-24" : "w-72"
-                }`}
+            <aside
+                className={`hidden lg:flex flex-col bg-base-100 border-r border-base-200 transition-all duration-300 ease-in-out sticky top-0 h-screen z-40 ${isCollapsed ? "w-24" : "w-72"
+                    }`}
             >
                 {/* Logo Area */}
                 <div className={`p-6 mb-4 flex items-center ${isCollapsed ? "justify-center" : "justify-between"}`}>
@@ -48,7 +57,7 @@ const DashboardLayout = () => {
                     <p className={`text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-2 px-2 italic ${isCollapsed ? "text-center" : ""}`}>
                         {isCollapsed ? "---" : "Main"}
                     </p>
-                    
+
                     <SidebarItem to="/" icon={<Home size={20} />} label="Landing Home" isCollapsed={isCollapsed} activeLink={activeLink} normalLink={normalLink} />
                     <SidebarItem to="/dashboard" icon={<LayoutDashboard size={20} />} label="Overview" isCollapsed={isCollapsed} activeLink={activeLink} normalLink={normalLink} end />
 
@@ -65,7 +74,7 @@ const DashboardLayout = () => {
                     {/* Personal */}
                     <div className="divider opacity-50"></div>
                     <SidebarItem to="/dashboard/profile" icon={<CgProfile size={20} />} label="My Profile" isCollapsed={isCollapsed} activeLink={activeLink} normalLink={normalLink} />
-                    
+
                     <li className={role === 'admin' || role === 'moderator' ? "hidden" : ""}>
                         <SidebarItem to="/dashboard/my-applications" icon={<ClipboardList size={20} />} label="Applications" isCollapsed={isCollapsed} activeLink={activeLink} normalLink={normalLink} />
                     </li>
@@ -76,16 +85,16 @@ const DashboardLayout = () => {
 
                 {/* Sidebar Footer: Collapse Toggle & Logout */}
                 <div className="p-4 border-t border-base-200 space-y-2">
-                    <button 
+                    <button
                         onClick={() => setIsCollapsed(!isCollapsed)}
                         className="btn btn-ghost w-full justify-start gap-4 text-neutral-500 rounded-xl hidden lg:flex"
                     >
                         {isCollapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
                         {!isCollapsed && <span className="font-bold">Collapse</span>}
                     </button>
-                    
-                    <button 
-                        onClick={logOut}
+
+                    <button
+                        onClick={handleSignOut}
                         className="btn btn-ghost w-full justify-start gap-4 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-xl font-bold"
                     >
                         <MdLogout size={20} />
@@ -107,7 +116,7 @@ const DashboardLayout = () => {
                             Dashboard / <span className="text-primary">{role}</span>
                         </h2>
                     </div>
-                    
+
                     <div className="flex-none gap-4">
                         <div className="hidden md:block text-right">
                             <p className="text-sm font-black text-neutral-800 leading-tight">{user?.displayName}</p>
@@ -150,13 +159,13 @@ const DashboardLayout = () => {
 // হেল্পার কম্পোনেন্ট: যা আইকন ও টেক্সট কন্ট্রোল করবে
 const SidebarItem = ({ to, icon, label, isCollapsed, activeLink, normalLink, end = false }) => (
     <li>
-        <NavLink 
-            to={to} 
+        <NavLink
+            to={to}
             end={end}
-            className={({ isActive }) => 
+            className={({ isActive }) =>
                 `flex items-center gap-4 p-3 transition-all duration-300 ${isActive ? activeLink : normalLink} ${isCollapsed ? "justify-center" : ""}`
             }
-            title={isCollapsed ? label : ""} 
+            title={isCollapsed ? label : ""}
         >
             <span className="shrink-0">{icon}</span>
             {!isCollapsed && <span className="font-bold whitespace-nowrap overflow-hidden text-ellipsis">{label}</span>}
