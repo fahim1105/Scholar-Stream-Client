@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
     ListCollapse, Pencil, Trash2, Star, CreditCard,
     History, GraduationCap, MapPin, Phone,
-    Info, CheckCircle2, Clock
+    Info, CheckCircle2, Clock, ChevronLeft, ChevronRight, X
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import UseAuth from '../../../../Hooks/UseAuth';
@@ -17,18 +17,32 @@ const MyApplications = () => {
     const [selectedApp, setSelectedApp] = useState(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editingApp, setEditingApp] = useState(null);
+    
+    // Pagination States
+    const [currentPage, setCurrentPage] = useState(1);
+    const limit = 20;
 
     const { register, handleSubmit, setValue, reset } = useForm();
 
-    const { data: applications = [], refetch, isLoading } = useQuery({
-        queryKey: ['myApplications', user?.email],
+    const { data: appData, refetch, isLoading } = useQuery({
+        queryKey: ['myApplications', user?.email, currentPage],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/applications?email=${user.email}`);
+            const res = await axiosSecure.get(`/applications?email=${user.email}&page=${currentPage}&limit=${limit}`);
             return res.data;
         }
     });
 
-    // --- Premium Review Modal Logic ---
+    const applications = appData?.applications || [];
+    const totalPages = appData?.totalPages || 1;
+    const totalItems = appData?.totalItems || 0;
+
+    // --- Pagination Handler ---
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // --- Handlers ---
     const handleAddReview = (app) => {
         Swal.fire({
             title: `<div class="flex flex-col items-center gap-2">
@@ -38,12 +52,12 @@ const MyApplications = () => {
             html: `
                 <div class="space-y-4 px-2">
                     <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-base-content/40 italic">Reviewing: ${app.universityName}</p>
-                    <div class="form-control w-full">
+                    <div class="form-control w-full text-left">
                         <label class="label"><span class="label-text font-black uppercase text-[10px] tracking-widest text-primary">Rating (1-5)</span></label>
                         <input type="number" id="rating" min="1" max="5" placeholder="Enter rating..." 
                             class="input input-bordered w-full rounded-2xl font-bold bg-base-200/50 focus:border-primary transition-all">
                     </div>
-                    <div class="form-control w-full">
+                    <div class="form-control w-full text-left">
                         <label class="label"><span class="label-text font-black uppercase text-[10px] tracking-widest text-primary">Your Feedback</span></label>
                         <textarea id="reviewComment" placeholder="Write your thoughts here..." 
                             class="textarea textarea-bordered w-full rounded-2xl font-bold bg-base-200/50 h-32 focus:border-primary transition-all"></textarea>
@@ -103,7 +117,6 @@ const MyApplications = () => {
         });
     };
 
-    // Other handlers (Edit, Delete, Payment) - remain same logic
     const handleEditClick = (app) => {
         setEditingApp(app);
         setValue("phoneNumber", app.phoneNumber || "");
@@ -171,7 +184,7 @@ const MyApplications = () => {
                             <h1 className="text-3xl md:text-5xl font-black text-neutral italic tracking-tighter uppercase leading-none">
                                 My <span className="text-primary underline decoration-primary/10">Applications</span>
                             </h1>
-                            <p className="text-base-content/40 mt-2 font-black uppercase text-[8px] md:text-[10px] tracking-[0.3em] italic">Manage your active scholarship requests</p>
+                            <p className="text-base-content/40 mt-2 font-black uppercase text-[8px] md:text-[10px] tracking-[0.3em] italic">Manage your {totalItems} active requests</p>
                         </div>
                     </div>
                 </div>
@@ -191,23 +204,20 @@ const MyApplications = () => {
                             <tbody className="divide-y divide-base-300/5">
                                 {applications.map((app, index) => (
                                     <tr key={app._id} className="hover:bg-primary/5 transition-all duration-300 group">
-                                        <td className="pl-10 font-mono text-[10px] text-base-content/20 font-black italic group-hover:text-primary transition-colors">#{index + 1}</td>
+                                        <td className="pl-10 font-mono text-[10px] text-base-content/20 font-black italic group-hover:text-primary transition-colors">
+                                            #{(currentPage - 1) * limit + index + 1}
+                                        </td>
                                         <td className="py-8">
                                             <div className="font-black text-neutral uppercase text-xs tracking-tight group-hover:translate-x-1 transition-transform">{app.scholarshipName}</div>
                                             <div className="text-[10px] font-bold text-primary/60 italic mt-1.5 flex items-center gap-1"><MapPin size={10}/> {app.universityName}</div>
                                         </td>
                                         <td>
                                             <div className="flex flex-col gap-2">
-                                                {/* --- STATUS LOGIC --- */}
                                                 <div className="flex items-center gap-2">
                                                     {app.paymentStatus === 'paid' ? (
-                                                        <span className="badge border-none bg-success/10 text-success font-black text-[9px] uppercase tracking-widest h-6 px-3 gap-1 italic">
-                                                            <CheckCircle2 size={10}/> Paid
-                                                        </span>
+                                                        <span className="badge border-none bg-success/10 text-success font-black text-[9px] uppercase tracking-widest h-6 px-3 gap-1 italic"><CheckCircle2 size={10}/> Paid</span>
                                                     ) : (
-                                                        <span className="badge border-none bg-warning/10 text-warning font-black text-[9px] uppercase tracking-widest h-6 px-3 gap-1 italic">
-                                                            <Clock size={10}/> Pending
-                                                        </span>
+                                                        <span className="badge border-none bg-warning/10 text-warning font-black text-[9px] uppercase tracking-widest h-6 px-3 gap-1 italic"><Clock size={10}/> Pending</span>
                                                     )}
                                                     <span className="text-neutral font-black text-[10px] italic">(${app.amountPaid || app.applicationFees || 0})</span>
                                                 </div>
@@ -234,50 +244,83 @@ const MyApplications = () => {
                 <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {applications.map((app, index) => (
                         <div key={app._id} className="bg-base-100 p-7 rounded-[2.5rem] border border-base-300/10 shadow-xl space-y-5 relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:scale-110 transition-transform">
-                                <GraduationCap size={60} />
-                            </div>
-                            
-                            <div className="flex justify-between items-center relative">
-                                <div className="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-[9px] font-black italic uppercase tracking-widest">App #{index + 1}</div>
+                            <div className="flex justify-between items-center">
+                                <div className="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-[9px] font-black italic uppercase tracking-widest">
+                                    App #{(currentPage - 1) * limit + index + 1}
+                                </div>
                                 {app.paymentStatus === 'paid' ? (
                                     <span className="text-success flex items-center gap-1 font-black text-[10px] uppercase italic tracking-widest"><CheckCircle2 size={12}/> Paid</span>
                                 ) : (
                                     <span className="text-warning flex items-center gap-1 font-black text-[10px] uppercase italic tracking-widest"><Clock size={12}/> Pending</span>
                                 )}
                             </div>
-
                             <div className="space-y-1.5">
                                 <h3 className="font-black text-neutral uppercase text-sm leading-tight italic line-clamp-2">{app.scholarshipName}</h3>
                                 <p className="text-[10px] font-bold text-primary italic opacity-70 flex items-center gap-1 leading-none"><MapPin size={10}/> {app.universityName}</p>
                             </div>
-
                             <div className="grid grid-cols-2 gap-3">
                                 <button onClick={() => setSelectedApp(app)} className="btn btn-ghost btn-sm bg-info/10 text-info rounded-2xl text-[10px] font-black uppercase tracking-widest italic">Details</button>
                                 {app.status === 'pending' && <button onClick={() => handleEditClick(app)} className="btn btn-ghost btn-sm bg-warning/10 text-warning rounded-2xl text-[10px] font-black uppercase tracking-widest italic">Edit</button>}
                                 {app.status === 'completed' && <button onClick={() => handleAddReview(app)} className="btn btn-ghost btn-sm bg-success/10 text-success rounded-2xl text-[10px] font-black uppercase tracking-widest italic">Review</button>}
-                                {(app.status === 'pending' && app.paymentStatus !== 'paid') && <button onClick={() => handlePayment(app)} className="btn btn-primary btn-sm col-span-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/20">Pay Fees Now</button>}
-                                {app.status === 'pending' && <button onClick={() => handleApplicationDelete(app._id)} className="btn btn-error btn-outline btn-sm col-span-2 rounded-2xl text-[10px] font-black uppercase tracking-widest italic">Cancel Application</button>}
                             </div>
                         </div>
                     ))}
                 </div>
+
+                {/* --- Pagination Pagination --- */}
+                <div className="mt-16 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 px-4">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral/40 italic">
+                        Showing Page <span className="text-primary">{currentPage}</span> of {totalPages}
+                    </p>
+                    
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                            disabled={currentPage === 1}
+                            className="btn btn-sm md:btn-md bg-base-200 border-none rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all shadow-lg shadow-neutral/5"
+                        >
+                            <ChevronLeft size={16} /> Prev
+                        </button>
+
+                        <div className="flex gap-2">
+                            {[...Array(totalPages)].map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    className={`btn btn-sm md:btn-md border-none rounded-2xl font-black text-[10px] w-10 md:w-12 transition-all ${
+                                        currentPage === index + 1 
+                                        ? "bg-primary text-white shadow-xl shadow-primary/20 scale-110" 
+                                        : "bg-base-200 text-neutral/40 hover:bg-base-300"
+                                    }`}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                            className="btn btn-sm md:btn-md bg-base-200 border-none rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all shadow-lg shadow-neutral/5"
+                        >
+                            Next <ChevronRight size={16} />
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            {/* --- Modals (Details & Edit remain same as previous perfect version) --- */}
+            {/* --- Modals --- */}
             {selectedApp && (
                 <dialog open className="modal modal-bottom sm:modal-middle backdrop-blur-md">
-                    <div className="modal-box rounded-[3rem] border border-base-300/10 shadow-2xl p-8 md:p-12 relative overflow-hidden">
+                    <div className="modal-box rounded-[3rem] border border-base-300/10 shadow-2xl p-8 md:p-12 relative overflow-hidden bg-base-100">
                         <div className="absolute top-0 left-0 w-full h-2 bg-primary"></div>
-                        <button onClick={() => setSelectedApp(null)} className="btn btn-sm btn-circle btn-ghost absolute right-8 top-8">✕</button>
-
+                        <button onClick={() => setSelectedApp(null)} className="btn btn-sm btn-circle btn-ghost absolute right-8 top-8"><X size={20} /></button>
                         <div className="mb-10 text-center sm:text-left">
                             <h3 className="font-black text-3xl md:text-4xl text-neutral italic uppercase tracking-tighter">
                                 App <span className="text-primary underline decoration-primary/20">Overview</span>
                             </h3>
                         </div>
-
-                        <div className="space-y-4">
+                        <div className="space-y-4 text-left">
                             <DetailRow label="University" value={selectedApp.universityName} icon={<GraduationCap size={18} />} />
                             <DetailRow label="Subject & Degree" value={`${selectedApp.subjectCategory} (${selectedApp.degree})`} icon={<Info size={18} />} />
                             <DetailRow label="Contact Info" value={selectedApp.phoneNumber || "N/A"} icon={<Phone size={18} />} />
@@ -289,24 +332,22 @@ const MyApplications = () => {
                                 </p>
                             </div>
                         </div>
-
                         <div className="modal-action mt-10">
                             <button onClick={() => setSelectedApp(null)} className="btn btn-primary btn-block rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl shadow-primary/20 italic">Close Overview</button>
                         </div>
                     </div>
-                    <div className="modal-backdrop" onClick={() => setSelectedApp(null)}></div>
                 </dialog>
             )}
 
             {isEditModalOpen && (
                 <div className="modal modal-open backdrop-blur-md">
-                    <div className="modal-box rounded-[3rem] p-10 max-w-md border border-base-300/10 shadow-2xl relative">
-                        <button onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-circle btn-ghost absolute right-8 top-8">✕</button>
+                    <div className="modal-box rounded-[3rem] p-10 max-w-md border border-base-300/10 shadow-2xl relative bg-base-100">
+                        <button onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-circle btn-ghost absolute right-8 top-8"><X size={20}/></button>
                         <h3 className="font-black text-2xl mb-10 flex items-center gap-4 italic uppercase tracking-tighter">
                             <div className="p-3 bg-warning/10 rounded-2xl text-warning shadow-lg shadow-warning/5"><Pencil size={24} /></div>
                             Update Profile
                         </h3>
-                        <form onSubmit={handleSubmit(onEditSubmit)} className="space-y-6">
+                        <form onSubmit={handleSubmit(onEditSubmit)} className="space-y-6 text-left">
                             <div className="form-control">
                                 <label className="text-[10px] font-black uppercase tracking-widest text-base-content/40 mb-2 px-3 italic">Phone Number</label>
                                 <input type="text" {...register("phoneNumber", { required: true })} className="input input-bordered bg-base-200/50 rounded-2xl font-bold focus:border-primary transition-all h-14" />
@@ -316,7 +357,7 @@ const MyApplications = () => {
                                 <textarea {...register("address", { required: true })} className="textarea textarea-bordered bg-base-200/50 rounded-2xl font-bold h-32 focus:border-primary transition-all p-4"></textarea>
                             </div>
                             <div className="pt-4">
-                                <button type="submit" className="btn btn-primary btn-block rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl shadow-primary/20 h-14">Update Records</button>
+                                <button type="submit" className="btn btn-primary btn-block rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl shadow-primary/20 h-14 italic">Update Records</button>
                             </div>
                         </form>
                     </div>
@@ -328,7 +369,7 @@ const MyApplications = () => {
 
 const DetailRow = ({ label, value, icon }) => (
     <div className="flex items-center gap-5 p-5 bg-base-200/50 rounded-[1.5rem] border border-base-300/5 hover:border-primary/20 transition-all group">
-        <div className="p-3.5 bg-white dark:bg-base-300 shadow-sm text-primary rounded-xl shrink-0 group-hover:scale-110 transition-transform">{icon}</div>
+        <div className="p-3.5 bg-base-100 shadow-sm text-primary rounded-xl shrink-0 group-hover:scale-110 transition-transform">{icon}</div>
         <div className="overflow-hidden">
             <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30 mb-1 italic">{label}</p>
             <p className="text-xs md:text-sm font-black text-neutral leading-tight break-words">{value}</p>

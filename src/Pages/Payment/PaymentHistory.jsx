@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query'
 import Swal from 'sweetalert2';
-import { Trash2, CreditCard, Calendar, Hash, DollarSign, History, Trash } from 'lucide-react';
+import { Trash2, History, ChevronLeft, ChevronRight } from 'lucide-react';
 import UseAuth from '../../Hooks/UseAuth';
 import UseAxiosSecure from '../../Hooks/UseAxiosSecure';
 import { motion } from 'framer-motion';
@@ -9,14 +9,27 @@ import { motion } from 'framer-motion';
 const PaymentHistory = () => {
     const { user } = UseAuth();
     const axiosSecure = UseAxiosSecure();
+    
+    // Pagination States
+    const [currentPage, setCurrentPage] = useState(1);
+    const limit = 20;
 
-    const { data: payments = [], refetch: paymentsRefetch, isLoading } = useQuery({
-        queryKey: ['payments', user?.email],
+    const { data: paymentData, refetch: paymentsRefetch, isLoading } = useQuery({
+        queryKey: ['payments', user?.email, currentPage],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/payments?email=${user?.email}`)
-            return res.data
+            const res = await axiosSecure.get(`/payments?email=${user?.email}&page=${currentPage}&limit=${limit}`);
+            return res.data;
         }
     });
+
+    const payments = paymentData?.payments || [];
+    const totalPages = paymentData?.totalPages || 1;
+    const totalItems = paymentData?.totalItems || 0;
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     const handleDeletePaymentAll = () => {
         Swal.fire({
@@ -89,8 +102,8 @@ const PaymentHistory = () => {
                     <div className="flex flex-row items-center gap-3 sm:gap-4">
                         <div className="stats shadow-xl md:shadow-2xl bg-base-200/50 backdrop-blur-md rounded-2xl md:rounded-[2rem] border border-base-300/10">
                             <div className="stat px-4 md:px-8 py-2 md:py-3">
-                                <div className="stat-title text-[8px] md:text-[10px] font-black uppercase tracking-widest text-base-content/40">Total</div>
-                                <div className="stat-value text-primary text-xl md:text-3xl font-black italic">{payments.length}</div>
+                                <div className="stat-title text-[8px] md:text-[10px] font-black uppercase tracking-widest text-base-content/40">Total Records</div>
+                                <div className="stat-value text-primary text-xl md:text-3xl font-black italic">{totalItems}</div>
                             </div>
                         </div>
                         {payments.length > 0 && (
@@ -123,7 +136,9 @@ const PaymentHistory = () => {
                             <tbody className="divide-y divide-base-300/5">
                                 {payments.map((payment, index) => (
                                     <tr key={payment._id} className="hover:bg-primary/5 transition-all duration-300 group/row">
-                                        <th className="pl-10 font-mono text-[10px] text-base-content/30 italic font-black">{index + 1}</th>
+                                        <th className="pl-10 font-mono text-[10px] text-base-content/30 italic font-black">
+                                            #{(currentPage - 1) * limit + index + 1}
+                                        </th>
                                         <td className="py-6 font-black text-neutral uppercase text-xs tracking-tight">{payment.scholarshipName}</td>
                                         <td>
                                             <div className="inline-flex items-center px-4 py-2 bg-success/10 text-success rounded-xl font-black text-xs border border-success/20">
@@ -153,7 +168,9 @@ const PaymentHistory = () => {
                             payments.map((payment, index) => (
                                 <div key={payment._id} className="bg-base-100 p-6 rounded-[2rem] border border-base-300/10 shadow-lg space-y-4">
                                     <div className="flex justify-between items-start">
-                                        <div className="bg-primary/5 text-primary text-[10px] font-black px-3 py-1 rounded-full italic">#{index + 1}</div>
+                                        <div className="bg-primary/5 text-primary text-[10px] font-black px-3 py-1 rounded-full italic">
+                                            #{(currentPage - 1) * limit + index + 1}
+                                        </div>
                                         <button onClick={() => handleDeletePayment(payment._id)} className="text-error/50 hover:text-error transition-colors p-1">
                                             <Trash2 size={20} />
                                         </button>
@@ -163,7 +180,7 @@ const PaymentHistory = () => {
                                         <label className="text-[9px] font-black uppercase text-base-content/30 block mb-1">Scholarship</label>
                                         <h3 className="font-black text-neutral uppercase text-sm leading-tight">{payment.scholarshipName}</h3>
                                     </div>
-
+                                    {/* ... amount and txID UI remains same ... */}
                                     <div className="grid grid-cols-2 gap-4 pt-2">
                                         <div>
                                             <label className="text-[9px] font-black uppercase text-base-content/30 block mb-1">Amount</label>
@@ -176,7 +193,6 @@ const PaymentHistory = () => {
                                             </div>
                                         </div>
                                     </div>
-
                                     <div className="pt-2">
                                         <label className="text-[9px] font-black uppercase text-base-content/30 block mb-1">Transaction ID</label>
                                         <code className="bg-base-200 px-3 py-1.5 rounded-lg text-[10px] font-black text-primary block truncate">
@@ -194,6 +210,49 @@ const PaymentHistory = () => {
                     </div>
 
                 </div>
+
+                {/* --- Pagination Controls --- */}
+                {totalPages > 1 && (
+                    <div className="mt-12 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 px-4">
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral/40 italic">
+                            Showing Page <span className="text-primary">{currentPage}</span> of {totalPages}
+                        </p>
+                        
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                                disabled={currentPage === 1}
+                                className="btn btn-sm md:btn-md bg-base-200 border-none rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all shadow-lg"
+                            >
+                                <ChevronLeft size={16} /> Prev
+                            </button>
+
+                            <div className="flex gap-2">
+                                {[...Array(totalPages)].map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handlePageChange(idx + 1)}
+                                        className={`btn btn-sm md:btn-md border-none rounded-2xl font-black text-[10px] w-10 md:w-12 transition-all ${
+                                            currentPage === idx + 1 
+                                            ? "bg-primary text-white shadow-xl scale-110" 
+                                            : "bg-base-200 text-neutral/40 hover:bg-base-300"
+                                        }`}
+                                    >
+                                        {idx + 1}
+                                    </button>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
+                                disabled={currentPage === totalPages}
+                                className="btn btn-sm md:btn-md bg-base-200 border-none rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all shadow-lg"
+                            >
+                                Next <ChevronRight size={16} />
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </motion.div>
     );
