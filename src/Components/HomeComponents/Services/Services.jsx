@@ -65,7 +65,7 @@ const Services = () => {
                     
                     <h2 className="text-4xl md:text-7xl font-black text-neutral italic uppercase tracking-tighter leading-none mb-6">
                         Elite Solutions For <br />
-                        <span className="text-primary underline decoration-4 underline-offset-8">Global Education</span>
+                        <span className="text-primary decoration-4 underline-offset-8">Global Education</span>
                     </h2>
                 </div>
 
