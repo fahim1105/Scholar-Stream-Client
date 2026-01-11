@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
+import { Eye, EyeOff } from "lucide-react";
 import UseAuth from "../../Hooks/UseAuth";
 import { Link, useLocation, useNavigate } from "react-router";
 import axios from "axios";
@@ -8,6 +9,7 @@ import UseAxiosSecure from "../../Hooks/UseAxiosSecure";
 import toast from "react-hot-toast";
 
 const Register = () => {
+    const [showPassword, setShowPassword] = useState(false);
     const { register, handleSubmit, formState: { errors }, watch } = useForm();
     const { registerUser, signInGoogle, updateUserProfile } = UseAuth();
     const [loading, setLoading] = useState(false);
@@ -36,7 +38,7 @@ const Register = () => {
                 email: data.email,
                 displayName: data.name,
                 photoURL,
-                role: "user",
+                role: "student",
                 createdAt: new Date(),
             };
 
@@ -52,7 +54,6 @@ const Register = () => {
         }
     };
 
-    // --- ফিক্সড গুগল লগইন ফাংশন ---
     const handleGoogleLogin = async () => {
         try {
             const result = await signInGoogle();
@@ -66,7 +67,6 @@ const Register = () => {
                 createdAt: new Date(),
             };
 
-            // ডাটাবেসে ইউজার পাঠানোর সময় catch ব্যবহার করেছি যাতে ইউজার আগে থেকে থাকলেও লগইন হয়ে যায়
             await axiosSecure.post('/users', userInfo)
                 .catch(err => console.log("User might already exist in DB", err));
 
@@ -80,11 +80,11 @@ const Register = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center px-4 py-10">
-            <div className="w-full max-w-md bg-white p-8 rounded-3xl shadow-xl border border-base-100">
+            <div className="w-full max-w-md bg-base-200 p-8 rounded-[2.5rem] shadow-2xl border border-base-300/50 backdrop-blur-sm">
 
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-800">Create Account</h1>
-                    <p className="text-gray-500 mt-2">Join <span className="text-lg font-bold tracking-tight text-gray-800">
+                    <h1 className="text-3xl font-black text-neutral italic uppercase tracking-tighter">Create Account</h1>
+                    <p className="text-neutral/50 mt-2 text-[10px] font-bold uppercase tracking-widest">Join <span className="font-black text-neutral italic">
                         Scholar<span className="text-primary">Stream</span>
                     </span> & start your journey</p>
                 </div>
@@ -92,23 +92,23 @@ const Register = () => {
                 <form onSubmit={handleSubmit(handleRegister)} className="space-y-5">
                     {/* Name */}
                     <div>
-                        <label className="block text-sm font-semibold text-base-300 mb-1">Full Name</label>
+                        <label className="block text-[9px] font-black uppercase tracking-widest text-neutral/50 mb-1.5 ml-1 italic">Full Name</label>
                         <input
                             type="text"
                             {...register("name", { required: "Name is required" })}
-                            placeholder="John Doe"
-                            className="w-full px-4 py-2.5 border border-base-300 rounded-xl focus:ring-2 focus:ring-primary focus:outline-none transition-all"
+                            placeholder="Your Name"
+                            className="w-full px-4 py-3 bg-base-100 border border-base-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
-                        {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+                        {errors.name && <p className="text-error text-[10px] font-black mt-1 ml-2 uppercase italic tracking-tighter">{errors.name.message}</p>}
                     </div>
 
-                    {/* --- কাস্টম ফটো সেকশন (ডিফল্ট টেক্সট ছাড়া) --- */}
+                    {/* Custom Photo Section */}
                     <div>
-                        <label className="block text-sm font-semibold text-base-300 mb-1">Profile Photo</label>
-                        <div className="flex items-center gap-4">
+                        <label className="block text-[9px] font-black uppercase tracking-widest text-neutral/50 mb-1.5 ml-1 italic">Profile Photo</label>
+                        <div className="flex items-center gap-4 p-2 bg-base-100 border border-base-300 rounded-2xl">
                             <label
                                 htmlFor="photo-upload"
-                                className="px-4 py-2 bg-base-100 text-primary border border-dashed border-primary/50 rounded-xl cursor-pointer hover:bg-primary/20 transition-all text-sm font-medium"
+                                className="px-4 py-2 bg-primary text-base-100 rounded-xl cursor-pointer hover:bg-neutral transition-all text-[10px] font-black uppercase tracking-widest italic"
                             >
                                 Choose Image
                             </label>
@@ -117,79 +117,88 @@ const Register = () => {
                                 type="file"
                                 accept="image/*"
                                 {...register("photo", { required: "Photo is required" })}
-                                className="hidden" // এটিই "No file chosen" হাইড করেছে
+                                className="hidden"
                             />
 
-                            <div className="h-12 w-12 rounded-full bg-base-100 overflow-hidden border-2 border-primary/20 ml-auto">
+                            <div className="h-12 w-12 rounded-full bg-base-200 overflow-hidden border-2 border-primary/20 ml-auto shadow-inner">
                                 {photoFile?.[0] ? (
                                     <img src={URL.createObjectURL(photoFile[0])} alt="preview" className="h-full w-full object-cover" />
                                 ) : (
-                                    <div className="h-full w-full flex items-center justify-center text-base-300 text-[10px]">No Pic</div>
+                                    <div className="h-full w-full flex items-center justify-center text-neutral/30 text-[8px] font-black uppercase">No Pic</div>
                                 )}
                             </div>
                         </div>
-                        {errors.photo && <p className="text-red-500 text-xs mt-1">{errors.photo.message}</p>}
+                        {errors.photo && <p className="text-error text-[10px] font-black mt-1 ml-2 uppercase italic tracking-tighter">{errors.photo.message}</p>}
                     </div>
 
-                    {/* Email */}
+                    {/* Email Address */}
                     <div>
-                        <label className="block text-sm font-semibold text-base-300 mb-1">Email Address</label>
+                        <label className="block text-[9px] font-black uppercase tracking-widest text-neutral/50 mb-1.5 ml-1 italic">Email Address</label>
                         <input
                             type="email"
                             {...register("email", { required: "Email is required" })}
-                            placeholder="example@mail.com"
-                            className="w-full px-4 py-2.5 border border-base-200 rounded-xl focus:ring-2 focus:ring-primary/50 focus:outline-none transition-all"
+                            placeholder="admin@scholarstream.com"
+                            className="w-full px-4 py-3 bg-base-100 border border-base-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
                         />
-                        {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+                        {errors.email && <p className="text-error text-[10px] font-black mt-1 ml-2 uppercase italic tracking-tighter">{errors.email.message}</p>}
                     </div>
 
-                    {/* Password */}
+                    {/* Password with Eye Toggle */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-1">Password</label>
-                        <input
-                            type="password"
-                            {...register("password", {
-                                required: "Password is required",
-                                minLength: { value: 6, message: "At least 6 characters" },
-                                pattern: {
-                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-                                    message: "Must include Uppercase, Lowercase, Number & Symbol"
-                                }
-                            })}
-                            placeholder="••••••••"
-                            className="w-full px-4 py-2.5 border border-base-200 rounded-xl focus:ring-2 focus:ring-primary/40 focus:outline-none transition-all"
-                        />
-                        {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+                        <label className="block text-[9px] font-black uppercase tracking-widest text-neutral/50 mb-1.5 ml-1 italic">Password</label>
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                {...register("password", {
+                                    required: "Password is required",
+                                    minLength: { value: 6, message: "At least 6 characters" },
+                                    pattern: {
+                                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                                        message: "Must include Uppercase, Lowercase, Number & Symbol"
+                                    }
+                                })}
+                                placeholder="Password@"
+                                className="w-full px-4 py-3 bg-base-100 border border-base-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm font-medium"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-3.5 text-neutral/30 hover:text-primary transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
+                        {errors.password && <p className="text-error text-[10px] font-black mt-1 ml-2 uppercase italic tracking-tighter leading-tight">{errors.password.message}</p>}
                     </div>
 
                     <button
                         disabled={loading}
                         type="submit"
-                        className={`w-full py-3 rounded-xl font-bold text-neutral transition-all ${loading ? 'bg-base-200 cursor-not-allowed' : 'bg-primary/70 hover:bg-primary shadow-lg shadow-primary/20'}`}
+                        className={`w-full py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] italic transition-all shadow-xl active:scale-95 ${loading ? 'bg-base-300 cursor-not-allowed text-neutral/30' : 'bg-primary text-base-100 hover:bg-neutral hover:-translate-y-1'}`}
                     >
                         {loading ? "Processing..." : "Create Account"}
                     </button>
                 </form>
 
                 <div className="mt-6 text-center">
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-neutral/40 text-[10px] font-black uppercase tracking-widest italic">
                         Already have an account?{" "}
-                        <Link state={from} to="/auth/login" className="text-primary/90 font-bold hover:underline">Login</Link>
+                        <Link state={from} to="/auth/login" className="text-primary/90 font-black hover:underline decoration-2 underline-offset-4">Login</Link>
                     </p>
                 </div>
 
                 <div className="flex items-center gap-4 my-6">
-                    <div className="flex-1 h-px bg-base-200"></div>
-                    <span className="text-base-300 text-xs font-medium uppercase">Or continue with</span>
-                    <div className="flex-1 h-px bg-base-200"></div>
+                    <div className="flex-1 h-px bg-base-300"></div>
+                    <span className="text-neutral/30 text-[9px] font-black uppercase tracking-[0.3em] italic">Or continue with</span>
+                    <div className="flex-1 h-px bg-base-300"></div>
                 </div>
 
                 <button
-                    type="button" // Type button দেওয়া হয়েছে যাতে ফর্ম সাবমিট না হয়ে যায়
+                    type="button"
                     onClick={handleGoogleLogin}
-                    className="w-full flex items-center justify-center gap-3 bg-white border border-base-200 py-2.5 rounded-xl hover:bg-base-100 transition-all font-medium text-base-300"
+                    className="w-full flex items-center justify-center gap-3 bg-base-100 border border-base-300 py-3 rounded-2xl hover:bg-neutral hover:text-white transition-all font-black text-[10px] uppercase tracking-widest italic group shadow-sm"
                 >
-                    <FcGoogle size={24} />
+                    <FcGoogle size={20} className="group-hover:scale-110 transition-transform" />
                     <span>Register with Google</span>
                 </button>
             </div>

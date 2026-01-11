@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-import { FaEye, FaCommentDots, FaBan, FaUniversity, FaUserGraduate, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FaEye, FaCommentDots, FaBan, FaUniversity, FaUserGraduate, FaCheckCircle, FaTimesCircle, FaCalendarAlt, FaInfoCircle } from "react-icons/fa";
 import { MdOutlinePendingActions, MdTimeline } from "react-icons/md";
 import UseAxiosSecure from "../../../../Hooks/UseAxiosSecure";
 import Loader from "../../../../Components/Loader/Loader";
@@ -14,7 +14,6 @@ const ModeratorApplications = () => {
     const [selectedApplication, setSelectedApplication] = useState(null);
     const [feedbackText, setFeedbackText] = useState("");
 
-    // 1. feetch all application from application collection
     const { data: applications = [], isLoading } = useQuery({
         queryKey: ["moderator-applications"],
         queryFn: async () => {
@@ -23,22 +22,16 @@ const ModeratorApplications = () => {
         }
     });
 
-    // 2. Status update mutation using ID
-    // learn mutation from homework of PH
-
     const statusMutation = useMutation({
         mutationFn: ({ id, status }) =>
             axiosSecure.patch(`/moderator/application-status/${id}`, { status }),
         onSuccess: () => {
             toast.success("Status updated successfully!");
-            queryClient.invalidateQueries({ queryKey: ["moderator-applications"] }); // learn form gpt
+            queryClient.invalidateQueries({ queryKey: ["moderator-applications"] });
         },
-        onError: () => {
-            toast.error("Failed to update status");
-        }
+        onError: () => toast.error("Failed to update status")
     });
 
-    // Feedback mutation using ID
     const feedbackMutation = useMutation({
         mutationFn: ({ id, feedback }) =>
             axiosSecure.patch(`/moderator/application-feedback/${id}`, { feedback }),
@@ -48,9 +41,7 @@ const ModeratorApplications = () => {
             setFeedbackText("");
             document.getElementById('feedback-modal').checked = false;
         },
-        onError: () => {
-            toast.error("Failed to save feedback");
-        }
+        onError: () => toast.error("Failed to save feedback")
     });
 
     const handleReject = (id) => {
@@ -59,20 +50,14 @@ const ModeratorApplications = () => {
             text: "Do you really want to reject this application?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#ef4444", // Red color for reject
-            cancelButtonColor: "#64748b",
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "var(--color-base-300)",
             confirmButtonText: "Yes, reject it!",
-            cancelButtonText: "No, cancel",
-            reverseButtons: true,
-            background: "#ffffff",
-            customClass: {
-                popup: 'rounded-[2rem]',
-                confirmButton: 'rounded-xl',
-                cancelButton: 'rounded-xl'
-            }
+            background: "var(--color-base-100)",
+            color: "var(--color-base-content)",
+            customClass: { popup: 'rounded-[2rem]' }
         }).then((result) => {
             if (result.isConfirmed) {
-                // আপনার mutation কল করা হচ্ছে
                 statusMutation.mutate({ id: id, status: "rejected" });
             }
         });
@@ -81,117 +66,156 @@ const ModeratorApplications = () => {
     if (isLoading) return <Loader />;
 
     return (
-        <div className="p-4 md:p-8 bg-base-200 min-h-screen">
-            <div className="max-w-7xl mx-auto">
-                <h2 className="text-3xl font-extrabold mb-6 text-neutral tracking-tight">
-                    Manage <span className="text-primary">Applications</span>
-                </h2>
+        <div className="p-3 md:p-8 min-h-screen bg-base-100 text-base-content rounded-3xl">
+            <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
+                
+                {/* Header Section */}
+                <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div className="space-y-1">
+                        <h2 className="text-3xl md:text-5xl font-black text-neutral italic uppercase tracking-tighter leading-none">
+                            Manage <span className="text-primary">Applications</span>
+                        </h2>
+                        <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] opacity-50 pl-1">
+                            System-wide student monitoring
+                        </p>
+                    </div>
+                    <div className="bg-primary/10 text-primary px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-primary/20 inline-flex items-center gap-2 self-start md:self-auto">
+                        <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        {applications.length} Records Found
+                    </div>
+                </header>
 
-                <div className="bg-base-100 shadow-2xl rounded-3xl overflow-hidden border border-base-300">
-                    <div className="overflow-x-auto">
-                        <table className="table table-zebra w-full">
-                            <thead className="bg-neutral text-white uppercase text-xs">
+                <div className="bg-base-200/50 shadow-2xl rounded-[2.5rem] overflow-hidden border border-base-300/50 backdrop-blur-sm">
+                    
+                    {/* Desktop View */}
+                    <div className="hidden lg:block overflow-x-auto">
+                        <table className="table w-full border-separate border-spacing-0">
+                            <thead className="bg-neutral text-base-100 uppercase text-[10px] tracking-[0.2em] italic">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Applicant</th>
-                                    <th>University</th>
-                                    <th>Payment</th>
-                                    <th>Status</th>
-                                    <th className="text-center">Actions</th>
+                                    <th className="py-6 pl-8">Applicant Information</th>
+                                    <th>Institutional Details</th>
+                                    <th className="text-center">Review Status</th>
+                                    <th className="text-right pr-12">Management Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {applications.map((app, idx) => (
-                                    <tr key={app._id} className="hover:bg-base-200 transition-colors">
-                                        <td>{idx + 1}</td>
-                                        <td>
-                                            <div className="flex flex-col">
-                                                <span className="font-bold flex items-center gap-1">
-                                                    <FaUserGraduate className="text-gray-400" /> {app.userName || "N/A"}
-                                                </span>
-                                                <span className="text-xs text-gray-500">{app.userEmail}</span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="text-sm">
-                                                <div className="font-semibold flex items-center gap-1 text-primary">
-                                                    <FaUniversity /> {app.universityName}
+                            <tbody className="divide-y divide-base-300/20">
+                                {applications.map((app) => (
+                                    <tr key={app._id} className="hover:bg-primary/5 transition-all duration-300 group">
+                                        <td className="py-5 pl-8">
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-3 bg-primary/10 rounded-2xl text-primary"><FaUserGraduate size={18}/></div>
+                                                <div className="max-w-[200px]">
+                                                    <div className="font-black text-neutral uppercase italic text-sm truncate">{app.userName || "Anonymous"}</div>
+                                                    <div className="text-[10px] opacity-60 font-bold truncate lowercase">{app.userEmail}</div>
                                                 </div>
-                                                <div className="text-xs opacity-70">{app.scholarshipName}</div>
                                             </div>
                                         </td>
                                         <td>
-                                            <span className="badge badge-outline badge-success font-mono font-bold uppercase text-[10px]">
-                                                {app.paymentStatus}
-                                            </span>
+                                            <div className="font-bold text-neutral/80 text-xs italic flex items-center gap-1.5">
+                                                <FaUniversity className="text-primary/50" /> {app.universityName}
+                                            </div>
+                                            <div className="text-[10px] opacity-40 font-black uppercase tracking-widest mt-1.5">{app.scholarshipName}</div>
                                         </td>
-                                        <td>
-                                            <div className="flex items-center gap-1 uppercase font-bold text-[10px]">
-                                                {app.status === 'completed' && <FaCheckCircle className="text-success" />}
-                                                {app.status === 'processing' && <MdTimeline className="text-info animate-pulse" />}
-                                                {app.status === 'pending' && <MdOutlinePendingActions className="text-warning" />}
-                                                {app.status === 'rejected' && <FaTimesCircle className="text-error" />}
+                                        <td className="text-center">
+                                            <div className={`inline-flex items-center gap-1.5 uppercase font-black text-[9px] px-3 py-1 rounded-full border ${
+                                                app.status === 'completed' ? 'text-success border-success/20 bg-success/5' : 
+                                                app.status === 'processing' ? 'text-info border-info/20 bg-info/5 animate-pulse' : 
+                                                app.status === 'rejected' ? 'text-error border-error/20 bg-error/5' : 'text-warning border-warning/20 bg-warning/5'
+                                            }`}>
+                                                {app.status === 'completed' && <FaCheckCircle />}
+                                                {app.status === 'processing' && <MdTimeline />}
+                                                {app.status === 'rejected' && <FaTimesCircle />}
+                                                {!['completed', 'processing', 'rejected'].includes(app.status) && <MdOutlinePendingActions />}
                                                 {app.status || "pending"}
                                             </div>
                                         </td>
-                                        <td className="flex justify-center gap-2">
-                                            {/* Details */}
-                                            <label
-                                                htmlFor="details-modal"
-                                                data-tip="Details"
-                                                className="btn btn-square btn-sm btn-info text-white shadow-md hover:scale-110 transition-transform tooltip before:bg-base-300"
-                                                onClick={() => setSelectedApplication(app)}
-                                                title="Details"
-                                            >
-                                                <FaEye />
-                                            </label>
-
-                                            {/* Feedback */}
-                                            <label
-                                                htmlFor="feedback-modal"
-                                                data-tip="Feedback"
-                                                className="btn btn-square btn-sm btn-warning text-white shadow-md hover:scale-110 transition-transform tooltip before:bg-base-300"
-                                                onClick={() => {
-                                                    setSelectedApplication(app);
-                                                    setFeedbackText(app.feedback || "");
-                                                }}
-                                                title="Give Feedback"
-                                            >
-                                                <FaCommentDots />
-                                            </label>
-
-                                            {/* Status Update Dropdown */}
-                                            <select
-                                                className="select select-bordered select-sm w-32 focus:outline-primary"
-                                                value={app.status || "pending"}
-                                                onChange={(e) => statusMutation.mutate({
-                                                    id: app._id,
-                                                    status: e.target.value
-                                                })}
-                                            >
-                                                <option value="pending">Pending</option>
-                                                <option value="processing">Processing</option>
-                                                <option value="completed">Completed</option>
-                                            </select>
-
-                                            {/* Cancel/Reject Button */}
-                                            {app.status !== 'rejected' && (
-                                                <button
-                                                    data-tip="Reject"
-                                                    className="btn btn-square btn-sm btn-error text-white shadow-md hover:scale-110 transition-transform tooltip before:bg-base-300"
-                                                    onClick={() => handleReject(app._id)}
-                                                    title="Reject"
+                                        <td className="text-right pr-8">
+                                            <div className="flex justify-end items-center gap-2.5">
+                                                <label htmlFor="details-modal" onClick={() => setSelectedApplication(app)} className="btn btn-square btn-sm bg-info/10 text-info border-none hover:bg-info hover:text-white rounded-xl"><FaEye /></label>
+                                                <label htmlFor="feedback-modal" onClick={() => { setSelectedApplication(app); setFeedbackText(app.feedback || ""); }} className="btn btn-square btn-sm bg-accent/10 text-accent border-none hover:bg-accent hover:text-neutral rounded-xl"><FaCommentDots /></label>
+                                                <select 
+                                                    className="select select-bordered select-xs rounded-xl font-black text-[9px] w-28 bg-base-100" 
+                                                    value={app.status || "pending"} 
+                                                    onChange={(e) => statusMutation.mutate({ id: app._id, status: e.target.value })}
                                                 >
-                                                    <FaBan />
-                                                </button>
-                                            )}
+                                                    <option value="pending">Pending</option>
+                                                    <option value="processing">Processing</option>
+                                                    <option value="completed">Completed</option>
+                                                </select>
+                                                {app.status !== 'rejected' && <button onClick={() => handleReject(app._id)} className="btn btn-square btn-sm bg-error/10 text-error border-none hover:bg-error hover:text-white rounded-xl"><FaBan /></button>}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        {applications.length === 0 && <p className="text-center py-10 text-gray-500">No applications found.</p>}
                     </div>
+
+                    {/* Mobile Card View (Updated: Only Name & Status Visible) */}
+                    <div className="lg:hidden p-4 space-y-5">
+                        {applications.map((app) => (
+                            <div key={app._id} className="bg-base-100 rounded-[2rem] p-5 border border-base-300 shadow-lg relative overflow-hidden">
+                                {/* Vertical Status Bar */}
+                                <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${
+                                    app.status === 'completed' ? 'bg-success' : 
+                                    app.status === 'rejected' ? 'bg-error' : 
+                                    app.status === 'processing' ? 'bg-info' : 'bg-warning'
+                                }`}></div>
+
+                                <div className="flex justify-between items-start mb-4 pl-2">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary shrink-0"><FaUserGraduate size={20} /></div>
+                                        <div className="min-w-0">
+                                            {/* Only Name Shown on Mobile */}
+                                            <h4 className="font-black text-neutral uppercase italic text-sm truncate leading-tight">
+                                                {app.userName || "Anonymous"}
+                                            </h4>
+                                            
+                                            {/* Status Badge Shown Clearly under Name */}
+                                            <div className={`inline-flex items-center gap-1 mt-1.5 uppercase font-black text-[8px] px-2 py-0.5 rounded-md border ${
+                                                app.status === 'completed' ? 'text-success border-success/20 bg-success/5' : 
+                                                app.status === 'processing' ? 'text-info border-info/20 bg-info/5' : 
+                                                app.status === 'rejected' ? 'text-error border-error/20 bg-error/5' : 'text-warning border-warning/20 bg-warning/5'
+                                            }`}>
+                                                {app.status || 'pending'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3 mb-5 pl-2">
+                                    <div className="p-3 bg-base-200/80 rounded-2xl border border-base-300/30">
+                                        <div className="flex items-center gap-2 text-[11px] font-bold text-neutral italic"><FaUniversity className="text-primary shrink-0" /> {app.universityName}</div>
+                                        <div className="text-[9px] opacity-40 font-black uppercase tracking-widest pl-5 mt-0.5 truncate">{app.scholarshipName}</div>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-base-300/50 pl-2">
+                                    <div className="flex gap-2">
+                                        <label htmlFor="details-modal" onClick={() => setSelectedApplication(app)} className="btn btn-sm btn-square bg-info/10 text-info border-none rounded-xl"><FaEye /></label>
+                                        <label htmlFor="feedback-modal" onClick={() => { setSelectedApplication(app); setFeedbackText(app.feedback || ""); }} className="btn btn-sm btn-square bg-accent/10 text-accent border-none rounded-xl"><FaCommentDots /></label>
+                                        {app.status !== 'rejected' && <button onClick={() => handleReject(app._id)} className="btn btn-sm btn-square bg-error/10 text-error border-none rounded-xl"><FaBan /></button>}
+                                    </div>
+                                    <select 
+                                        className="select select-bordered select-xs rounded-xl flex-1 max-w-[110px] bg-base-200 text-[10px] font-bold uppercase h-8" 
+                                        value={app.status || "pending"} 
+                                        onChange={(e) => statusMutation.mutate({ id: app._id, status: e.target.value })}
+                                    >
+                                        <option value="pending">Pending</option>
+                                        <option value="processing">Processing</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {applications.length === 0 && (
+                        <div className="p-20 flex flex-col items-center justify-center opacity-30">
+                            <FaInfoCircle size={40} className="mb-4 text-primary" />
+                            <div className="italic font-black uppercase tracking-[0.5em] text-sm text-center">No Applications Found</div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -199,62 +223,82 @@ const ModeratorApplications = () => {
 
             {/* Details Modal */}
             <input type="checkbox" id="details-modal" className="modal-toggle" />
-            <div className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box rounded-3xl max-w-2xl border border-base-300 shadow-2xl">
-                    <h3 className="font-bold text-2xl mb-4 border-b pb-4 text-primary flex items-center gap-2">
-                        <FaUserGraduate /> Application Profile
-                    </h3>
-                    {selectedApplication && (
-                        <div className="space-y-4 text-sm md:text-base">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-base-200 p-6 rounded-2xl">
-                                <div><p className="font-bold opacity-60 uppercase text-xs">Applicant Email</p> <p className="break-all">{selectedApplication.userEmail}</p></div>
-                                <div><p className="font-bold opacity-60 uppercase text-xs">University Name</p> {selectedApplication.universityName}</div>
-                                <div><p className="font-bold opacity-60 uppercase text-xs">Scholarship Category</p> {selectedApplication.scholarshipName}</div>
-                                <div><p className="font-bold opacity-60 uppercase text-xs">Applied Date</p> {new Date(selectedApplication.appliedAt).toLocaleDateString()}</div>
-                                <div><p className="font-bold opacity-60 uppercase text-xs">Transaction ID</p> <span className="font-mono text-xs">{selectedApplication.transactionId}</span></div>
-                                <div><p className="font-bold opacity-60 uppercase text-xs">Amount Paid</p> <span className="text-green-600 font-bold">${selectedApplication.amountPaid}</span></div>
-                            </div>
-                            <div className="p-5 border border-dashed border-primary/30 rounded-2xl bg-primary/5">
-                                <p className="font-bold mb-2 flex items-center gap-2 text-primary">
-                                    <FaCommentDots /> Official Feedback:
-                                </p>
-                                <p className="italic text-gray-700 leading-relaxed">
-                                    {selectedApplication.feedback || "No feedback has been recorded for this applicant yet."}
-                                </p>
-                            </div>
-                        </div>
-                    )}
-                    <div className="modal-action">
-                        <label htmlFor="details-modal" className="btn btn-block rounded-xl">Close Details</label>
+            <div className="modal modal-bottom sm:modal-middle backdrop-blur-sm">
+                <div className="modal-box rounded-t-[3rem] sm:rounded-[3rem] p-0 overflow-hidden bg-base-100 border-t sm:border border-base-300 shadow-2xl max-w-2xl">
+                    <div className="bg-primary p-6 md:p-8 text-white relative overflow-hidden">
+                        <FaUserGraduate size={100} className="absolute top-0 right-0 p-6 opacity-10 rotate-12" />
+                        <h3 className="font-black text-2xl md:text-3xl italic uppercase tracking-tighter relative z-10">Application <span className="opacity-50">Profile</span></h3>
+                        <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] opacity-80 mt-1 relative z-10 italic">Verification & Payment Detail</p>
+                    </div>
+                    
+                    <div className="p-6 md:p-8 space-y-5 md:space-y-6 max-h-[70vh] overflow-y-auto">
+                        {selectedApplication && (
+                            <>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                                    <div className="p-4 bg-base-200 rounded-2xl border border-base-300/30">
+                                        <p className="text-[9px] font-black uppercase text-primary tracking-widest mb-1">Email ID</p>
+                                        <p className="font-bold text-neutral text-sm break-all">{selectedApplication.userEmail}</p>
+                                    </div>
+                                    <div className="p-4 bg-base-200 rounded-2xl border border-base-300/30">
+                                        <p className="text-[9px] font-black uppercase text-primary tracking-widest mb-1 flex items-center gap-1"><FaCalendarAlt size={10}/> Submission Date</p>
+                                        <p className="font-bold text-neutral italic text-sm">{new Date(selectedApplication.appliedAt).toLocaleDateString()}</p>
+                                    </div>
+                                    <div className="p-4 bg-base-200 rounded-2xl border border-base-300/30 md:col-span-2">
+                                        <p className="text-[9px] font-black uppercase text-primary tracking-widest mb-1">Institution & Scholarship</p>
+                                        <p className="font-bold text-neutral italic text-sm">{selectedApplication.universityName}</p>
+                                        <p className="text-[10px] opacity-50 uppercase font-black tracking-wider mt-1">{selectedApplication.scholarshipName}</p>
+                                    </div>
+                                </div>
+                                <div className="p-5 md:p-6 rounded-[2rem] bg-neutral text-white flex flex-col sm:flex-row justify-between items-center gap-4 shadow-xl">
+                                    <div className="text-center sm:text-left">
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-1 italic">Transaction Reference</p>
+                                        <p className="font-mono text-[10px] opacity-80 text-base-100 break-all px-2 sm:px-0">{selectedApplication.transactionId}</p>
+                                    </div>
+                                    <div className="text-center sm:text-right sm:border-l border-white/10 sm:pl-6 w-full sm:w-auto">
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-primary mb-1 italic">Paid Amount</p>
+                                        <p className="text-2xl font-black italic text-success">${selectedApplication.amountPaid}</p>
+                                    </div>
+                                </div>
+                                <div className="p-5 md:p-6 rounded-[2rem] border-2 border-dashed border-primary/20 bg-primary/5">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-2 flex items-center gap-2 font-bold italic"><FaCommentDots /> Official Remarks</p>
+                                    <p className="italic text-sm text-base-content/70 leading-relaxed font-medium">
+                                        {selectedApplication.feedback ? `"${selectedApplication.feedback}"` : "No official feedback has been recorded for this profile yet."}
+                                    </p>
+                                </div>
+                            </>
+                        )}
+                        <label htmlFor="details-modal" className="btn btn-block bg-primary border-none text-base-100 rounded-2xl font-black uppercase italic h-14 hover:bg-neutral transition-all">Dismiss Profile</label>
                     </div>
                 </div>
             </div>
 
             {/* Feedback Modal */}
             <input type="checkbox" id="feedback-modal" className="modal-toggle" />
-            <div className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box rounded-3xl shadow-2xl border border-base-300">
-                    <h3 className="font-bold text-xl mb-4 text-neutral flex items-center gap-2">
-                        <FaCommentDots className="text-warning" /> Provide Review Feedback
-                    </h3>
-                    <textarea
-                        className="textarea textarea-bordered w-full h-40 rounded-2xl focus:border-primary focus:ring-1 focus:ring-primary shadow-inner"
-                        placeholder="Write detailed feedback for the student..."
-                        value={feedbackText}
-                        onChange={(e) => setFeedbackText(e.target.value)}
-                    ></textarea>
-                    <div className="modal-action gap-3">
-                        <button
-                            className={`btn btn-primary flex-1 rounded-xl shadow-lg ${feedbackMutation.isPending ? 'loading' : ''}`}
-                            disabled={!feedbackText.trim()}
-                            onClick={() => feedbackMutation.mutate({
-                                id: selectedApplication._id,
-                                feedback: feedbackText
-                            })}
-                        >
-                            {feedbackMutation.isPending ? "Saving..." : "Save Feedback"}
-                        </button>
-                        <label htmlFor="feedback-modal" className="btn flex-1 rounded-xl">Cancel</label>
+            <div className="modal modal-bottom sm:modal-middle backdrop-blur-md">
+                <div className="modal-box rounded-t-[3rem] sm:rounded-[3rem] p-0 overflow-hidden bg-base-100 border-t sm:border border-base-300 shadow-2xl">
+                    <div className="bg-accent p-6 md:p-8 text-neutral">
+                        <h3 className="font-black text-2xl italic uppercase tracking-tighter flex items-center gap-3">
+                            <FaCommentDots className="animate-pulse" /> Review <span className="opacity-40">Feedback</span>
+                        </h3>
+                        <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 mt-2 italic">Guidelines for the applicant</p>
+                    </div>
+                    <div className="p-6 md:p-8 space-y-6">
+                        <textarea
+                            className="textarea textarea-bordered w-full h-40 md:h-44 rounded-[2rem] focus:ring-4 focus:ring-accent/10 focus:border-accent font-medium p-5 md:p-6 shadow-inner bg-base-200 text-base-content border-base-300"
+                            placeholder="Type specific missing documents or instructions..."
+                            value={feedbackText}
+                            onChange={(e) => setFeedbackText(e.target.value)}
+                        ></textarea>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <button
+                                className={`flex-[2] btn bg-accent border-none text-neutral rounded-2xl font-black uppercase italic shadow-lg h-14 hover:bg-neutral hover:text-white transition-all order-1 sm:order-2 ${feedbackMutation.isPending ? 'loading' : ''}`}
+                                disabled={!feedbackText.trim()}
+                                onClick={() => feedbackMutation.mutate({ id: selectedApplication._id, feedback: feedbackText })}
+                            >
+                                {feedbackMutation.isPending ? "Syncing..." : "Publish Feedback"}
+                            </button>
+                            <label htmlFor="feedback-modal" className="btn flex-1 bg-base-300 text-base-100 border-none rounded-2xl font-black uppercase italic h-14 order-2 sm:order-1">Discard</label>
+                        </div>
                     </div>
                 </div>
             </div>

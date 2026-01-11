@@ -1,63 +1,42 @@
 import { useQuery } from "@tanstack/react-query";
-
-import { FaTrashAlt, FaStar, FaCalendarAlt, FaEnvelope, FaUniversity } from "react-icons/fa";
-import Swal from "sweetalert2"; // SweetAlert2 ইমপোর্ট করুন
+import { FaTrashAlt, FaStar, FaCalendarAlt, FaEnvelope, FaUniversity, FaQuoteLeft } from "react-icons/fa";
+import Swal from "sweetalert2";
 import UseAxiosSecure from "../../../../Hooks/UseAxiosSecure";
 import Loader from "../../../../Components/Loader/Loader";
+import { motion, AnimatePresence } from "framer-motion";
 
-const AllReviews = () => {
+const ManageReviews = () => {
     const axiosSecure = UseAxiosSecure();
 
     const { data: reviews = [], refetch, isLoading } = useQuery({
         queryKey: ["all-reviews"],
         queryFn: async () => {
-            const res = await axiosSecure.get("/reviews");
+            const res = await axiosSecure.get("/all-reviews");
             return res.data;
         }
     });
 
     const handleDelete = (id) => {
-        // SweetAlert2 কনফার্মেশন ডায়ালগ
         Swal.fire({
             title: "Are you sure?",
-            text: "You won't be able to revert this review!",
+            text: "This review will be permanently deleted!",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
+            confirmButtonColor: "#3B82F6",
+            cancelButtonColor: "#ef4444",
             confirmButtonText: "Yes, delete it!",
-            customClass: {
-                popup: 'rounded-[2rem]', // কার্ডের সাথে মিল রেখে রাউন্ডেড করা
-                confirmButton: 'rounded-xl',
-                cancelButton: 'rounded-xl'
-            }
+            background: "#fff",
+            customClass: { popup: 'rounded-[2rem]' }
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
                     const res = await axiosSecure.delete(`/reviews/${id}`);
                     if (res.data.deletedCount > 0) {
-                        Swal.fire({
-                            title: "Deleted!",
-                            text: "The review has been deleted.",
-                            icon: "success",
-                            timer: 2000,
-                            showConfirmButton: false,
-                            customClass: {
-                                popup: 'rounded-[2rem]'
-                            }
-                        });
                         refetch();
+                        toast.success("Review deleted successfully");
                     }
                 } catch (error) {
-                    console.log(error)
-                    Swal.fire({
-                        title: "Error!",
-                        text: "Something went wrong while deleting.",
-                        icon: "error",
-                        customClass: {
-                            popup: 'rounded-[2rem]'
-                        }
-                    });
+                    console.error(error);
                 }
             }
         });
@@ -66,81 +45,125 @@ const AllReviews = () => {
     if (isLoading) return <Loader />;
 
     return (
-        <div className="p-6 bg-base-200 min-h-screen">
-            <div className="max-w-7xl mx-auto">
-                <header className="mb-10">
-                    <h2 className="text-4xl font-black text-neutral flex items-center gap-3">
-                        Total Reviews <span className="text-primary bg-primary/10 px-4 py-1 rounded-2xl text-2xl">{reviews.length}</span>
-                    </h2>
-                    <p className="text-gray-500 mt-2 ml-1">Manage and moderate all student feedbacks from here.</p>
-                </header>
+        <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-10 mb-20">
+            {/* --- HEADER --- */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 animate-in fade-in slide-in-from-top-4 duration-1000">
+                <div className="text-left relative flex-1">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 md:gap-6 mb-3">
+                        {/* Main Title */}
+                        <h2 className="text-4xl md:text-6xl font-black text-neutral  uppercase tracking-tighter leading-none">
+                            Review <br className="sm:hidden" />
+                            <span className="text-primary relative inline-block">
+                                Moderation
+                                <div className="absolute -bottom-1 left-0 w-full h-1.5 bg-primary/20 rounded-full"></div>
+                            </span>
+                        </h2>
 
-                {reviews.length === 0 ? (
-                    <div className="text-center py-20 bg-base-100 rounded-[3rem] shadow-inner border-4 border-dashed border-base-300">
-                        <p className="text-2xl text-gray-400 font-bold">No reviews found!</p>
+                        {/* Premium Dynamic Count Badge */}
+                        <div className="relative group self-start sm:self-center">
+                            <div className="bg-primary text-white px-5 py-2 md:px-7 md:py-3 rounded-[2rem] shadow-[0_10px_30px_rgba(59,130,246,0.4)] flex flex-col items-center justify-center border-b-4 border-black/10 active:scale-95 transition-transform cursor-default min-w-[100px] md:min-w-[120px]">
+                                <span className="text-xl md:text-2xl font-black leading-none tracking-tighter">
+                                    {reviews.length}
+                                </span>
+                                <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] leading-tight opacity-90">
+                                    Feedbacks
+                                </span>
+                            </div>
+                            {/* Decorative Ping Animation */}
+                            <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40"></span>
+                                <span className="relative inline-flex rounded-full h-4 w-4 bg-primary/60 border-2 border-white dark:border-base-100"></span>
+                            </span>
+                        </div>
                     </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {reviews.map((review) => (
-                            <div
+
+                    {/* Subtitle */}
+                    <p className="text-base-content/40 font-black uppercase text-[10px] md:text-[12px] tracking-[0.4em] italic px-1 leading-relaxed max-w-xl">
+                        System-wide student experience monitoring
+                    </p>
+                </div>
+            </div>
+
+            {/* --- REVIEWS GRID --- */}
+            {reviews.length === 0 ? (
+                <div className="text-center py-20 opacity-20 italic">
+                    <FaQuoteLeft size={40} className="mx-auto mb-4" />
+                    <h3 className="text-2xl font-black uppercase">No Reviews Found</h3>
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <AnimatePresence>
+                        {reviews.map((review, index) => (
+                            <motion.div
+                                layout
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1 }}
                                 key={review._id}
-                                className="bg-base-100 rounded-[2.5rem] p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-transparent hover:border-primary/20 group flex flex-col justify-between"
+                                className="bg-base-100 rounded-[3rem] p-8 shadow-2xl border border-base-200 group flex flex-col justify-between relative overflow-hidden"
                             >
+                                {/* Top Section: Avatar & Info */}
                                 <div>
-                                    {/* User Profile Info */}
                                     <div className="flex items-center gap-4 mb-6">
-                                        <div className="avatar">
-                                            <div className="w-14 h-14 rounded-2xl ring ring-primary ring-offset-2 overflow-hidden shadow-lg">
-                                                <img src={review.reviewerPhoto} alt={review.reviewerName} />
-                                            </div>
+                                        <div className="mask mask-squircle w-16 h-16 border-2 border-primary/10 shadow-lg">
+                                            <img
+                                                src={review.reviewerPhoto || "https://i.ibb.co/4pDNDk1/avatar.png"}
+                                                alt={review.reviewerName}
+                                                className="object-cover w-full h-full"
+                                            />
                                         </div>
-                                        <div>
-                                            <h4 className="font-black text-neutral text-xl">{review.reviewerName}</h4>
-                                            <div className="flex items-center gap-1 text-xs text-gray-400 font-medium">
-                                                <FaEnvelope className="text-primary" /> {review.reviewerEmail}
+                                        <div className="flex-1 overflow-hidden">
+                                            <h4 className="font-black text-neutral uppercase italic text-lg leading-tight truncate">
+                                                {review.reviewerName}
+                                            </h4>
+                                            <div className="flex items-center gap-1 text-[9px] text-base-content/40 font-black uppercase tracking-widest truncate">
+                                                <FaEnvelope className="text-primary/50" /> {review.reviewerEmail}
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* University Name Badge */}
-                                    <div className="inline-flex items-center gap-2 bg-neutral text-white px-4 py-2 rounded-xl text-sm mb-5 shadow-md">
-                                        <FaUniversity className="text-primary" />
-                                        <span className="font-bold truncate max-w-[180px]">{review.scholarshipName}</span>
+                                    {/* Scholarship Pill (Black Header like your screenshot) */}
+                                    <div className="mb-6">
+                                        <div className="flex items-center gap-2 bg-black text-white px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.1em] shadow-lg">
+                                            <FaUniversity className="text-primary" />
+                                            <span className="truncate">{review.scholarshipName}</span>
+                                        </div>
                                     </div>
 
-                                    {/* Review Text */}
+                                    {/* Quote/Comment */}
                                     <div className="relative mb-6">
-                                        <p className="text-gray-600 italic leading-relaxed text-base pl-4 border-l-4 border-primary/20">
-                                            "{review.reviewComment}"
+                                        <FaQuoteLeft className="absolute -top-1 -left-1 text-primary/10" size={30} />
+                                        <p className="text-neutral/80 italic text-sm md:text-base leading-relaxed pl-6 line-clamp-4 font-medium">
+                                            {review.reviewComment}
                                         </p>
                                     </div>
                                 </div>
 
-                                {/* Card Footer: Rating, Date & Actions */}
-                                <div className="mt-4 pt-6 border-t border-base-200 flex items-center justify-between">
-                                    <div className="flex flex-col gap-1">
-                                        <div className="flex items-center text-amber-500 gap-1 font-black text-lg">
+                                {/* Bottom Section: Rating & Delete */}
+                                <div className="mt-4 pt-6 border-t border-base-200 flex items-end justify-between">
+                                    <div className="space-y-2">
+                                        <div className="flex items-center text-amber-500 gap-1.5 font-black text-xl italic">
                                             <FaStar /> {review.rating || "0"}
                                         </div>
-                                        <div className="flex items-center gap-1 text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                                            <FaCalendarAlt /> {review.createdAt ? new Date(review.createdAt).toLocaleDateString() : "N/A"}
+                                        <div className="flex items-center gap-1.5 text-[10px] text-base-content/30 font-black uppercase tracking-tighter">
+                                            <FaCalendarAlt /> {review.createdAt ? new Date(review.createdAt).toLocaleDateString() : "22/12/2025"}
                                         </div>
                                     </div>
 
                                     <button
                                         onClick={() => handleDelete(review._id)}
-                                        className="btn btn-error btn-circle shadow-lg shadow-error/30 hover:scale-110 transition-transform"
+                                        className="w-12 h-12 flex items-center justify-center bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all duration-300 shadow-lg active:scale-90"
                                     >
-                                        <FaTrashAlt className="text-white text-lg" />
+                                        <FaTrashAlt size={18} />
                                     </button>
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
-                    </div>
-                )}
-            </div>
+                    </AnimatePresence>
+                </div>
+            )}
         </div>
     );
 };
 
-export default AllReviews;
+export default ManageReviews;

@@ -8,8 +8,10 @@ const AuthLayout = () => {
         <div className='px-10 mx-auto bg-[#0d1233]'>
             <Link to="/">
                 <div className='bg-base-200 px-5 py-2 rounded-3xl flex items-center gap-2'>
-                    <img className='w-10 rounded-2xl' src={LogoIMG} alt="" />
-                    <span className="text-xl font-bold tracking-tight text-gray-800">
+                    <div className="p-1.5 bg-primary rounded-2xl text-white shadow-lg shrink-0 group-hover:rotate-12 transition-transform duration-500">
+                        <img src={LogoIMG} className='w-8 rounded-lg' alt="" />
+                    </div>
+                    <span className="text-xl font-bold tracking-tight text-neutral">
                         Scholar<span className="text-primary">Stream</span>
                     </span>
                 </div>

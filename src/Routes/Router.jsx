@@ -28,6 +28,17 @@ import Analytics from '../Pages/Dashboard/Analytics/Analytics';
 import UserProfile from '../Pages/Dashboard/UserDashboard/UserProfile/UserProfile';
 import MyApplications from '../Pages/Dashboard/UserDashboard/MyApplications/MyApplications';
 import MyReviews from '../Pages/Dashboard/UserDashboard/MyReviews/MyReviews';
+import Blogs from '../Pages/Blogs/Blogs';
+import ManageBlogs from '../Pages/Dashboard/ManageBlogs/ManageBlogs';
+import OurToppers from '../Pages/Topers/Topers';
+import ManageToppers from '../Pages/Dashboard/ModeratorDashboard/ManageTopers/ManageTopers';
+import AboutUs from '../Pages/AboutUs/AboutUs';
+import Documentation from '../Pages/Documentation/Documentation';
+import Tutorials from '../Pages/Tutorials/Tutorials';
+import Community from '../Pages/Community/Community';
+import Careers from '../Pages/Careers/Careers';
+import Privacy from '../Pages/Privacy/Privacy';
+import Terms from '../Pages/Terms/Terms';
 
 export const router = createBrowserRouter([
     {
@@ -45,7 +56,44 @@ export const router = createBrowserRouter([
             },
             {
                 path: "/scholarship-details/:id",
-                element: <PrivetRoutes><ScholarshipDetails></ScholarshipDetails></PrivetRoutes>,
+                // element: <PrivetRoutes><ScholarshipDetails></ScholarshipDetails></PrivetRoutes>,
+                element: <ScholarshipDetails></ScholarshipDetails>
+            },
+            {
+                path: "/blogs",
+                element: <PrivetRoutes><Blogs></Blogs></PrivetRoutes>
+            },
+            {
+                path: "/our-topers",
+                element: <PrivetRoutes><OurToppers></OurToppers></PrivetRoutes>
+            },
+            {
+                path: "/about-us",
+                Component: AboutUs
+            },
+            {
+                path: "/documentation",
+                Component: Documentation
+            },
+            {
+                path: "/tutorials",
+                Component: Tutorials
+            },
+            {
+                path: "/community",
+                Component: Community
+            },
+            {
+                path: "/careers",
+                Component: Careers
+            },
+            {
+                path: "/privacy",
+                Component: Privacy
+            },
+            {
+                path: "/terms",
+                Component: Terms
             }
         ]
 
@@ -94,6 +142,10 @@ export const router = createBrowserRouter([
                 Component: MyReviews
             },
             {
+                path: "my-applications",
+                Component: MyApplications
+            },
+            {
                 path: "add-scholarship",
                 element: <AdminRoutes><AddScholarship></AddScholarship></AdminRoutes>
             },
@@ -102,12 +154,16 @@ export const router = createBrowserRouter([
                 element: <AdminRoutes><ManageScholarship></ManageScholarship></AdminRoutes>
             },
             {
-                path: "my-applications",
-                Component: MyApplications
-            },
-            {
                 path: 'manage-users',
                 element: <AdminRoutes><ManageUsers></ManageUsers></AdminRoutes>
+            },
+            {
+                path: "manage-blogs",
+                element: <AdminRoutes><ManageBlogs></ManageBlogs></AdminRoutes>
+            },
+            {
+                path: "manage-topers",
+                element: <ModeratorRoutes><ManageToppers></ManageToppers></ModeratorRoutes>
             },
             {
                 path: "manage-reviews",

@@ -3,7 +3,8 @@ import UseRole from '../../../Hooks/UseRole';
 import AdminAnalytics from './AdminAnalytics';
 import Loader from '../../../Components/Loader/Loader';
 import ModeratorApplications from '../ModeratorDashboard/ModeratorApplications/ModeratorApplications';
-import MyApplications from '../UserDashboard/MyApplications/MyApplications';
+import UserOverview from './UserOverview';
+// import MyApplications from '../UserDashboard/MyApplications/MyApplications';
 
 const Analytics = () => {
     const { role, roleLoading } = UseRole();
@@ -19,7 +20,8 @@ const Analytics = () => {
         return <ModeratorApplications></ModeratorApplications>
     }
     else {
-        return <MyApplications></MyApplications>
+        // return <MyApplications></MyApplications>
+        return <UserOverview></UserOverview>
     }
 
 };

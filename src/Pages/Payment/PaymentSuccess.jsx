@@ -36,55 +36,55 @@ const PaymentSuccess = () => {
     if (!paymentInfo) return <Loader />;
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-            <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-2xl p-8 text-center border border-gray-100 relative overflow-hidden">
+        <div className="min-h-screen flex items-center rounded-3xl justify-center bg-base-100 p-4">
+            <div className="max-w-md w-full bg-base-200/50 rounded-[2.5rem] shadow-2xl p-8 text-center border border-base-300/50 backdrop-blur-sm relative overflow-hidden">
 
-                {/* Decorative Top Bar */}
-                <div className="absolute top-0 left-0 w-full h-2 bg-green-500"></div>
+                {/* Decorative Top Bar - Success Green */}
+                <div className="absolute top-0 left-0 w-full h-2 bg-success"></div>
 
-                {/* Success Icon */}
-                <div className="flex justify-center mb-6 mt-4">
-                    <div className="bg-green-100 p-4 rounded-full animate-bounce">
-                        <BsCheckCircleFill className="text-5xl text-green-500" />
+                {/* Success Icon with Glow */}
+                <div className="flex justify-center mb-6 mt-4 relative">
+                    <div className="bg-success/10 p-5 rounded-full ring-8 ring-success/5 animate-bounce">
+                        <BsCheckCircleFill className="text-5xl text-success" />
                     </div>
                 </div>
 
-                <h1 className="text-3xl font-black text-gray-800 mb-2">Payment Successful!</h1>
-                <p className="text-gray-500 mb-8 text-sm px-6">
+                <h1 className="text-3xl font-black text-neutral italic uppercase tracking-tighter mb-2">Payment Successful!</h1>
+                <p className="text-neutral/50 mb-8 text-[11px] font-bold uppercase tracking-widest px-6 italic leading-relaxed">
                     Congratulations! Your application has been received and is now being processed.
                 </p>
 
                 {/* Info Card / Receipt */}
-                <div className="bg-slate-50 rounded-3xl p-6 mb-8 border border-slate-200 text-left space-y-5">
+                <div className="bg-base-100 rounded-3xl p-6 mb-8 border border-base-300 text-left space-y-5 shadow-inner">
 
                     {/* Scholarship & University */}
                     <div className="flex items-start gap-3">
-                        <div className="mt-1 text-indigo-600"><FiInfo /></div>
+                        <div className="mt-1 text-success text-lg"><FiInfo /></div>
                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Scholarship Details</p>
-                            <h3 className="font-bold text-gray-800 leading-tight">{paymentInfo.scholarshipName}</h3>
-                            <p className="text-xs text-gray-500 font-medium">{paymentInfo.universityName}</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-neutral/40 italic mb-1">Scholarship Details</p>
+                            <h3 className="font-black text-neutral italic leading-tight uppercase text-sm">{paymentInfo.scholarshipName}</h3>
+                            <p className="text-[10px] text-neutral/60 font-bold uppercase tracking-tight mt-1">{paymentInfo.universityName}</p>
                         </div>
                     </div>
 
                     {/* Amount Paid */}
-                    <div className="flex justify-between items-center py-3 border-y border-dashed border-gray-300">
-                        <span className="text-sm font-bold text-gray-600">Amount Paid:</span>
-                        <span className="text-xl font-black text-green-600">${paymentInfo.amountPaid}</span>
+                    <div className="flex justify-between items-center py-4 border-y border-dashed border-base-300">
+                        <span className="text-[10px] font-black text-neutral/50 uppercase tracking-widest italic">Amount Paid:</span>
+                        <span className="text-2xl font-black text-success italic">${paymentInfo.amountPaid}</span>
                     </div>
 
                     {/* Transaction ID */}
                     <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Transaction ID</p>
-                        <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-200 shadow-sm">
-                            <span className="text-gray-700 text-[10px] font-mono break-all leading-tight pr-2">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-neutral/40 mb-2 italic pl-1">Transaction ID</p>
+                        <div className="flex items-center justify-between bg-base-200 p-3 rounded-xl border border-base-300 group transition-all">
+                            <span className="text-neutral text-[9px] font-mono font-bold break-all leading-tight pr-2 uppercase opacity-70">
                                 {paymentInfo.transactionId}
                             </span>
                             <button
                                 onClick={() => handleCopy(paymentInfo.transactionId, "trans")}
-                                className="p-2 hover:bg-slate-100 rounded-lg transition-colors text-indigo-600 shrink-0"
+                                className="p-2 hover:bg-success/20 rounded-lg transition-all text-success shrink-0"
                             >
-                                {copiedField === "trans" ? <FiCheck className="text-green-500" /> : <FiCopy />}
+                                {copiedField === "trans" ? <FiCheck className="scale-125" /> : <FiCopy />}
                             </button>
                         </div>
                     </div>
@@ -94,13 +94,13 @@ const PaymentSuccess = () => {
                 <div className="flex flex-col gap-3">
                     <Link
                         to="/dashboard/my-applications"
-                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-100 transition-all hover:-translate-y-1 active:scale-95"
+                        className="w-full bg-neutral hover:bg-success text-base-100 font-black py-4 rounded-2xl shadow-xl transition-all hover:-translate-y-1 active:scale-95 uppercase text-xs italic tracking-widest"
                     >
                         View My Applications
                     </Link>
                     <Link
                         to="/"
-                        className="text-gray-400 hover:text-indigo-600 font-bold text-xs uppercase tracking-widest transition-colors py-2"
+                        className="text-neutral/40 hover:text-success font-black text-[10px] uppercase tracking-[0.3em] transition-all py-2 italic"
                     >
                         Return to Home
                     </Link>

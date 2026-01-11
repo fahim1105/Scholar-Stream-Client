@@ -1,64 +1,92 @@
 import React from 'react';
 import FooterIMG from '../../assets/logo.png'
+import { Link } from 'react-router';
+import { Facebook, Github, Linkedin } from 'lucide-react';
 
 const Footer = () => {
     return (
-        <footer className="px-6 md:px-16 lg:px-24 xl:px-32 w-full">
-            <div className="flex flex-col md:flex-row items-start justify-center gap-10 py-10 border-b border-gray-500/30">
+        <footer className="px-6 md:px-16 lg:px-24 xl:px-32 w-full bg-base-100 transition-colors duration-300">
+            <div className="flex flex-col md:flex-row items-start justify-between gap-10 py-16 border-b border-base-300/20">
 
                 <div className="max-w-96">
                     <div className='flex gap-2 items-center'>
-                        <img className='w-10 h-10 rounded-md' src={FooterIMG} alt="" />
-                        <span className="text-xl lg:text-2xl font-black tracking-tight text-gray-800">
-                            Scholar <span className="text-primary">Stream</span>
+                        <div className="p-1 bg-base-200 rounded-lg border border-base-300/30">
+                            <img className='w-10 h-10 object-contain' src={FooterIMG} alt="Logo" />
+                        </div>
+                        <span className="text-xl lg:text-2xl font-black tracking-tighter text-neutral">
+                            SCHOLAR <span className="text-primary italic">STREAM</span>
                         </span>
                     </div>
-                    <p className="mt-6 text-sm text-gray-500">
-                        Empowering students to unlock their future. Scholar Stream simplifies the search for global scholarships, connecting ambitious minds with life-changing academic opportunities through a seamless, transparent, and accessible platform.                    </p>
-                    <div className="flex items-center gap-2 mt-3">
-                        <a href="#">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19.167 2.5a9.1 9.1 0 0 1-2.617 1.275 3.733 3.733 0 0 0-6.55 2.5v.833a8.88 8.88 0 0 1-7.5-3.775s-3.333 7.5 4.167 10.833a9.7 9.7 0 0 1-5.834 1.667C8.333 20 17.5 15.833 17.5 6.25q0-.35-.067-.692A6.43 6.43 0 0 0 19.167 2.5" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </a>
-                        <a href="#">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M7.5 15.833c-4.167 1.25-4.167-2.084-5.833-2.5m11.666 5v-3.225a2.8 2.8 0 0 0-.783-2.175c2.616-.292 5.366-1.283 5.366-5.833a4.53 4.53 0 0 0-1.25-3.125 4.22 4.22 0 0 0-.075-3.142s-.983-.292-3.258 1.233a11.15 11.15 0 0 0-5.833 0C5.225.541 4.242.833 4.242.833a4.22 4.22 0 0 0-.075 3.142 4.53 4.53 0 0 0-1.25 3.15c0 4.516 2.75 5.508 5.366 5.833a2.8 2.8 0 0 0-.783 2.15v3.225" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </a>
-                        <a href="#">
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M13.333 6.667a5 5 0 0 1 5 5V17.5H15v-5.833a1.667 1.667 0 0 0-3.334 0V17.5H8.333v-5.833a5 5 0 0 1 5-5M5 7.5H1.667v10H5zM3.333 5a1.667 1.667 0 1 0 0-3.333 1.667 1.667 0 0 0 0 3.333" stroke="#2563EB" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </a>
+                    <p className="mt-6 text-sm text-base-content/60 leading-relaxed font-medium">
+                        Empowering students to unlock their future. Scholar Stream simplifies the search for global scholarships, connecting ambitious minds with life-changing academic opportunities.
+                    </p>
+
+                    {/* Social Icons */}
+                    <div className="flex items-center gap-3 mt-6">
+                        {[
+                            { icon: <Facebook size={18} />, href: "https://facebook.com", color: "hover:bg-blue-600" },
+                            { icon: <Github size={18} />, href: "https://github.com/fahim1105", color: "hover:bg-gray-800" },
+                            { icon: <Linkedin size={18} />, href: "https://linkedin.com", color: "hover:bg-blue-700" }
+                        ].map((social, index) => (
+                            <a
+                                key={index}
+                                href={social.href}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={`p-2.5 rounded-xl border border-base-300/50 text-base-content/70 hover:text-white ${social.color} transition-all duration-300 shadow-sm`}
+                            >
+                                {social.icon}
+                            </a>
+                        ))}
                     </div>
                 </div>
 
-                <div className="w-1/2 flex flex-wrap md:flex-nowrap justify-between">
+                <div className="flex flex-wrap gap-16 md:gap-24">
+                    {/* Resources Column */}
                     <div>
-                        <h2 className="font-semibold text-gray-900 mb-5">RESOURCES</h2>
-                        <ul className="text-sm text-gray-500 space-y-2 list-none">
-                            <li><a href="#">Documentation</a></li>
-                            <li><a href="#">Tutorials</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Community</a></li>
+                        <h2 className="font-black text-neutral text-xs uppercase tracking-[0.2em] mb-6">Resources</h2>
+                        <ul className="text-sm space-y-3 list-none">
+                            {['Documentation', 'Tutorials', 'Blogs', 'Community'].map((item) => (
+                                <li key={item}>
+                                    <Link
+                                        to={`/${item.toLowerCase()}`}
+                                        className="text-base-content/60 hover:text-primary font-bold transition-colors"
+                                    >
+                                        {item}
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
+
+                    {/* Company Column */}
                     <div>
-                        <h2 className="font-semibold text-gray-900 mb-5">COMPANY</h2>
-                        <div className="text-sm text-gray-500 space-y-2 list-none">
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Privacy</a></li>
-                            <li><a href="#">Terms</a></li>
-                        </div>
+                        <h2 className="font-black text-neutral text-xs uppercase tracking-[0.2em] mb-6">Company</h2>
+                        <ul className="text-sm space-y-3 list-none">
+                            {['About-Us', 'Careers', 'Privacy', 'Terms'].map((item) => (
+                                <li key={item}>
+                                    <Link
+                                        to={`/${item.toLowerCase()}`}
+                                        className="text-base-content/60 hover:text-primary font-bold transition-colors"
+                                    >
+                                        {item.replace('-', ' ')}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
 
             </div>
-            <p className="py-4 text-center text-xs md:text-sm text-gray-500">
-                Copyright 2024 © <a href="https://prebuiltui.com">Scholar Stream</a>. All Right Reserved.
-            </p>
+
+            <div className="py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p className="text-xs font-bold text-base-content/40 uppercase tracking-widest">
+                    Copyright 2026 © <span className="text-primary">Scholar Stream</span>
+                </p>
+                <p className="text-[10px] font-black text-base-content/20 uppercase tracking-[0.3em]">
+                    Built for Global Success
+                </p>
+            </div>
         </footer>
     );
 };

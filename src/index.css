@@ -22,6 +22,30 @@
   --color-base-200: #E5E7EB;
   /* gray-800  sometime for text*/
   --color-base-300: #4B5563;
+
+  --color-base-content: #1E293B;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  --color-primary: #3B82F6;
+  --color-secondary: #818CF8;
+  --color-accent: #FBBF24;
+
+  /* ডার্ক মোডে হেডলাইন বা লোগোর পাশের লেখা একদম সাদা দেখাবে */
+  --color-neutral: #FFFFFF;
+
+  /* ব্যাকগ্রাউন্ড লেয়ার */
+  --color-base-100: #020617;
+  /* মূল ব্যাকগ্রাউন্ড */
+  --color-base-200: #0F172A;
+  /* কার্ড এবং নেভবার ব্যাকগ্রাউন্ড */
+  --color-base-300: #F8FAFC;
+  /* বর্ডার */
+
+  /* সাধারণ টেক্সট এবং নেভবার লিঙ্কের জন্য এটিই সবচেয়ে গুরুত্বপূর্ণ */
+  /* এটি আপনার ধোঁয়াটে হয়ে থাকা লেখাগুলোকে উজ্জ্বল করবে */
+  --color-base-content: #F8FAFC;
 }
 
 * {
