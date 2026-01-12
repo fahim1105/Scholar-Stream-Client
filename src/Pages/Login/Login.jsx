@@ -60,7 +60,7 @@ const Login = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-10 ">
+        <div className="min-h-screen flex items-center justify-center md:px-4 py-10 ">
             <div className="w-full max-w-sm bg-base-200 p-8 rounded-[2.5rem] shadow-2xl border border-base-300/50 backdrop-blur-sm">
                 <h1 className="text-3xl font-black mb-1 text-neutral italic uppercase tracking-tighter">Welcome Back</h1>
                 <p className="text-base-content/50 mb-6 text-[10px] font-bold uppercase tracking-widest">Login to <span className="font-black text-neutral">Scholar<span className="text-primary">Stream</span></span></p>

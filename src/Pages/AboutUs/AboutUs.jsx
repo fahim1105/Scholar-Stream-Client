@@ -40,7 +40,7 @@ const AboutUs = () => {
                 {/* --- 1. HERO SECTION --- */}
                 <section className="relative min-h-[70vh] lg:min-h-[85vh] flex items-center pt-24 lg:pt-32 pb-12">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, x: -50 }}
                             animate={{ opacity: 1, x: 0 }}
                             className="space-y-6 lg:space-y-8 text-center lg:text-left"
@@ -57,13 +57,13 @@ const AboutUs = () => {
                                 ScholarStream isn't just a platform; it's a bridge to your global future. Since 2020, we’ve been breaking down financial barriers.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                <button className="inline-flex items-center justify-center gap-3 bg-neutral text-base-100 px-10 py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-primary transition-all shadow-xl active:scale-95 group">
-                                    Watch Journey <PlayCircle size={18} className="group-hover:scale-110 transition-transform" />
+                                <button className=" bg-neutral text-base-100 px-10 py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] hover:bg-primary transition-all shadow-xl active:scale-95 group">
+                                    <a className='inline-flex items-center justify-center gap-3' href=" https://youtu.be/LigaN_DGhl8?si=XCe4rhrH6D22k6IO">Watch Journey <PlayCircle size={18} className="group-hover:scale-110 transition-transform" /></a>
                                 </button>
                             </div>
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             className="relative mt-8 lg:mt-0"
@@ -91,8 +91,8 @@ const AboutUs = () => {
                 <section className="py-16 lg:py-24">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                         {stats.map((stat, i) => (
-                            <motion.div 
-                                key={i} 
+                            <motion.div
+                                key={i}
                                 whileHover={{ y: -10 }}
                                 className="group p-10 lg:p-14 bg-base-200 rounded-[2.5rem] lg:rounded-[3.5rem] text-center border border-base-300/5 hover:bg-neutral hover:text-base-100 transition-all duration-500 shadow-xl shadow-primary/5"
                             >
@@ -149,8 +149,8 @@ const AboutUs = () => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-16">
                         {values.map((v, i) => (
-                            <motion.div 
-                                key={i} 
+                            <motion.div
+                                key={i}
                                 whileHover={{ y: -15 }}
                                 className="p-10 lg:p-20 border border-base-300/10 rounded-[3rem] lg:rounded-[5rem] bg-base-200/50 hover:bg-base-100 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 text-center"
                             >
