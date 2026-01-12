@@ -121,7 +121,7 @@ const ManageReviews = () => {
                                     </div>
 
                                     <div className="mb-4">
-                                        <div className="flex items-center gap-2 bg-neutral text-white px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg">
+                                        <div className="flex items-center gap-2 bg-neutral text-base-100 px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg">
                                             <FaUniversity className="text-primary shrink-0" />
                                             <span className="truncate">{review.scholarshipName}</span>
                                         </div>
@@ -181,7 +181,7 @@ const ManageReviews = () => {
                                     onClick={() => handlePageChange(idx + 1)}
                                     className={`btn btn-sm md:btn-md border-none rounded-2xl font-black text-[10px] w-10 md:w-12 transition-all ${
                                         currentPage === idx + 1 
-                                        ? "bg-primary text-white shadow-lg scale-110" 
+                                        ? "bg-primary text-base-100 shadow-lg scale-110" 
                                         : "bg-base-200 text-neutral/40 hover:bg-base-300"
                                     }`}
                                 >
