@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
     ListCollapse, Pencil, Trash2, Star, CreditCard,
-    History, GraduationCap, MapPin, Phone,
-    Info, CheckCircle2, Clock, ChevronLeft, ChevronRight, X
+    GraduationCap, MapPin, Phone,
+    Info, CheckCircle2, Clock, ChevronLeft, ChevronRight, X, Hash, DollarSign
 } from 'lucide-react';
 import Swal from 'sweetalert2';
 import UseAuth from '../../../../Hooks/UseAuth';
@@ -18,9 +18,8 @@ const MyApplications = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editingApp, setEditingApp] = useState(null);
     
-    // Pagination States
     const [currentPage, setCurrentPage] = useState(1);
-    const limit = 20;
+    const limit = 10; // মোবাইলে পারফরম্যান্সের জন্য ১০ করা হয়েছে
 
     const { register, handleSubmit, setValue, reset } = useForm();
 
@@ -36,13 +35,12 @@ const MyApplications = () => {
     const totalPages = appData?.totalPages || 1;
     const totalItems = appData?.totalItems || 0;
 
-    // --- Pagination Handler ---
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // --- Handlers ---
+    // --- Handlers (Existing logic remains same) ---
     const handleAddReview = (app) => {
         Swal.fire({
             title: `<div class="flex flex-col items-center gap-2">
@@ -100,14 +98,7 @@ const MyApplications = () => {
                 try {
                     const res = await axiosSecure.post('/reviews', reviewData);
                     if (res.data.insertedId) {
-                        Swal.fire({ 
-                            icon: "success", 
-                            title: "Thank You!", 
-                            text: "Review submitted successfully.", 
-                            showConfirmButton: false, 
-                            timer: 1500,
-                            customClass: { popup: 'rounded-[2rem]' }
-                        });
+                        Swal.fire({ icon: "success", title: "Success", text: "Review submitted.", showConfirmButton: false, timer: 1500, customClass: { popup: 'rounded-[2rem]' } });
                         refetch();
                     }
                 } catch (err) {
@@ -171,25 +162,25 @@ const MyApplications = () => {
     if (isLoading) return <div className="flex justify-center items-center h-96"><span className="loading loading-dots loading-lg text-primary"></span></div>;
 
     return (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen px-2 md:px-4 pb-20">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="min-h-screen p-3 md:p-8 pb-20 overflow-hidden">
             <div className="max-w-7xl mx-auto">
                 
-                {/* --- Header Section --- */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                    <div className="flex items-center gap-3 md:gap-5 flex-wrap">
-                        <div className="p-3 md:p-4 bg-primary rounded-[2rem] text-white shadow-xl shadow-primary/20 shrink-0">
-                            <GraduationCap size={32} />
+                {/* --- Header --- */}
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10 md:mb-16">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 md:p-4 bg-primary rounded-2xl md:rounded-[2rem] text-white shadow-xl shadow-primary/20">
+                            <GraduationCap size={28} />
                         </div>
                         <div>
-                            <h1 className="text-3xl md:text-5xl font-black text-neutral italic tracking-tighter uppercase leading-none">
+                            <h1 className="text-2xl md:text-5xl font-black text-neutral italic tracking-tighter uppercase">
                                 My <span className="text-primary underline decoration-primary/10">Applications</span>
                             </h1>
-                            <p className="text-base-content/40 mt-2 font-black uppercase text-[8px] md:text-[10px] tracking-[0.3em] italic">Manage your {totalItems} active requests</p>
+                            <p className="text-base-content/40 mt-1 font-black uppercase text-[8px] md:text-[10px] tracking-[0.3em] italic">Manage your {totalItems} active requests</p>
                         </div>
                     </div>
                 </div>
 
-                {/* --- Desktop View: Table --- */}
+                {/* --- Desktop Table --- */}
                 <div className="hidden lg:block bg-base-100 rounded-[3.5rem] shadow-2xl border border-base-300/10 overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="table w-full border-separate border-spacing-y-0">
@@ -204,11 +195,11 @@ const MyApplications = () => {
                             <tbody className="divide-y divide-base-300/5">
                                 {applications.map((app, index) => (
                                     <tr key={app._id} className="hover:bg-primary/5 transition-all duration-300 group">
-                                        <td className="pl-10 font-mono text-[10px] text-base-content/20 font-black italic group-hover:text-primary transition-colors">
+                                        <td className="pl-10 font-mono text-[10px] text-base-content/20 font-black italic">
                                             #{(currentPage - 1) * limit + index + 1}
                                         </td>
                                         <td className="py-8">
-                                            <div className="font-black text-neutral uppercase text-xs tracking-tight group-hover:translate-x-1 transition-transform">{app.scholarshipName}</div>
+                                            <div className="font-black text-neutral uppercase text-xs tracking-tight">{app.scholarshipName}</div>
                                             <div className="text-[10px] font-bold text-primary/60 italic mt-1.5 flex items-center gap-1"><MapPin size={10}/> {app.universityName}</div>
                                         </td>
                                         <td>
@@ -226,11 +217,11 @@ const MyApplications = () => {
                                         </td>
                                         <td className="py-4">
                                             <div className="flex justify-center gap-2">
-                                                <button onClick={() => setSelectedApp(app)} className="btn btn-square btn-sm btn-ghost text-info hover:bg-info/10 rounded-xl transition-all"><ListCollapse size={18} /></button>
-                                                {app.status === 'pending' && <button onClick={() => handleEditClick(app)} className="btn btn-square btn-sm btn-ghost text-warning hover:bg-warning/10 rounded-xl transition-all"><Pencil size={18} /></button>}
-                                                {(app.status === 'pending' && app.paymentStatus !== 'paid') && <button onClick={() => handlePayment(app)} className="btn btn-square btn-sm btn-ghost text-primary hover:bg-primary/10 rounded-xl transition-all shadow-lg shadow-primary/5"><CreditCard size={18} /></button>}
-                                                {app.status === 'pending' && <button onClick={() => handleApplicationDelete(app._id)} className="btn btn-square btn-sm btn-ghost text-error hover:bg-error/10 rounded-xl transition-all"><Trash2 size={18} /></button>}
-                                                {app.status === 'completed' && <button onClick={() => handleAddReview(app)} className="btn btn-square btn-sm btn-ghost text-success hover:bg-success/10 rounded-xl transition-all shadow-lg shadow-success/5"><Star size={18} /></button>}
+                                                <button onClick={() => setSelectedApp(app)} className="btn btn-square btn-sm btn-ghost text-info hover:bg-info/10 rounded-xl"><ListCollapse size={18} /></button>
+                                                {app.status === 'pending' && <button onClick={() => handleEditClick(app)} className="btn btn-square btn-sm btn-ghost text-warning hover:bg-warning/10 rounded-xl"><Pencil size={18} /></button>}
+                                                {(app.status === 'pending' && app.paymentStatus !== 'paid') && <button onClick={() => handlePayment(app)} className="btn btn-square btn-sm btn-ghost text-primary hover:bg-primary/10 rounded-xl"><CreditCard size={18} /></button>}
+                                                {app.status === 'pending' && <button onClick={() => handleApplicationDelete(app._id)} className="btn btn-square btn-sm btn-ghost text-error hover:bg-error/10 rounded-xl"><Trash2 size={18} /></button>}
+                                                {app.status === 'completed' && <button onClick={() => handleAddReview(app)} className="btn btn-square btn-sm btn-ghost text-success hover:bg-success/10 rounded-xl"><Star size={18} /></button>}
                                             </div>
                                         </td>
                                     </tr>
@@ -240,124 +231,170 @@ const MyApplications = () => {
                     </div>
                 </div>
 
-                {/* --- Mobile View: Cards --- */}
-                <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {/* --- Mobile Card View (Well Responsive) --- */}
+                <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {applications.map((app, index) => (
-                        <div key={app._id} className="bg-base-100 p-7 rounded-[2.5rem] border border-base-300/10 shadow-xl space-y-5 relative overflow-hidden group">
-                            <div className="flex justify-between items-center">
-                                <div className="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-[9px] font-black italic uppercase tracking-widest">
-                                    App #{(currentPage - 1) * limit + index + 1}
+                        <div key={app._id} className="bg-base-100 p-6 rounded-[2.5rem] border border-base-300/10 shadow-lg space-y-5 relative overflow-hidden flex flex-col justify-between">
+                            
+                            {/* Card Top Info */}
+                            <div className="flex justify-between items-start">
+                                <div className="px-3 py-1 bg-primary/10 text-primary rounded-lg text-[9px] font-black italic uppercase flex items-center gap-1">
+                                    <Hash size={10} /> {(currentPage - 1) * limit + index + 1}
                                 </div>
-                                {app.paymentStatus === 'paid' ? (
-                                    <span className="text-success flex items-center gap-1 font-black text-[10px] uppercase italic tracking-widest"><CheckCircle2 size={12}/> Paid</span>
-                                ) : (
-                                    <span className="text-warning flex items-center gap-1 font-black text-[10px] uppercase italic tracking-widest"><Clock size={12}/> Pending</span>
+                                <div className="flex flex-col items-end gap-1">
+                                    {app.paymentStatus === 'paid' ? (
+                                        <span className="text-success flex items-center gap-1 font-black text-[9px] uppercase italic tracking-widest"><CheckCircle2 size={10}/> Paid</span>
+                                    ) : (
+                                        <span className="text-warning flex items-center gap-1 font-black text-[9px] uppercase italic tracking-widest"><Clock size={10}/> Pending</span>
+                                    )}
+                                    <span className="text-[9px] font-black text-neutral opacity-40 uppercase italic">${app.amountPaid || app.applicationFees || 0}</span>
+                                </div>
+                            </div>
+
+                            {/* Main Content */}
+                            <div className="space-y-2">
+                                <h3 className="font-black text-neutral uppercase text-sm leading-snug italic line-clamp-2 min-h-[2.5rem]">
+                                    {app.scholarshipName}
+                                </h3>
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-primary italic opacity-70">
+                                    <MapPin size={10} className="shrink-0" /> 
+                                    <span className="truncate">{app.universityName}</span>
+                                </div>
+                                <div className="pt-1">
+                                    <span className="text-[8px] font-black uppercase bg-base-200 px-2 py-0.5 rounded text-base-content/50 italic tracking-widest">
+                                        Status: {app.status}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Action Buttons (Fix: Stacked for clarity in mobile) */}
+                            <div className="grid grid-cols-2 gap-2 pt-2">
+                                <button onClick={() => setSelectedApp(app)} className="btn btn-ghost btn-sm bg-info/10 text-info rounded-xl text-[10px] font-black uppercase tracking-widest italic flex items-center justify-center gap-2 h-10 min-h-0 w-full">
+                                    <ListCollapse size={14}/> Details
+                                </button>
+                                
+                                {app.status === 'pending' && (
+                                    <button onClick={() => handleEditClick(app)} className="btn btn-ghost btn-sm bg-warning/10 text-warning rounded-xl text-[10px] font-black uppercase tracking-widest italic flex items-center justify-center gap-2 h-10 min-h-0 w-full">
+                                        <Pencil size={14}/> Edit
+                                    </button>
                                 )}
-                            </div>
-                            <div className="space-y-1.5">
-                                <h3 className="font-black text-neutral uppercase text-sm leading-tight italic line-clamp-2">{app.scholarshipName}</h3>
-                                <p className="text-[10px] font-bold text-primary italic opacity-70 flex items-center gap-1 leading-none"><MapPin size={10}/> {app.universityName}</p>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <button onClick={() => setSelectedApp(app)} className="btn btn-ghost btn-sm bg-info/10 text-info rounded-2xl text-[10px] font-black uppercase tracking-widest italic">Details</button>
-                                {app.status === 'pending' && <button onClick={() => handleEditClick(app)} className="btn btn-ghost btn-sm bg-warning/10 text-warning rounded-2xl text-[10px] font-black uppercase tracking-widest italic">Edit</button>}
-                                {app.status === 'completed' && <button onClick={() => handleAddReview(app)} className="btn btn-ghost btn-sm bg-success/10 text-success rounded-2xl text-[10px] font-black uppercase tracking-widest italic">Review</button>}
+
+                                {(app.status === 'pending' && app.paymentStatus !== 'paid') && (
+                                    <button onClick={() => handlePayment(app)} className="btn btn-ghost btn-sm bg-primary/10 text-primary rounded-xl text-[10px] font-black uppercase tracking-widest italic flex items-center justify-center gap-2 h-10 min-h-0 w-full col-span-2">
+                                        <CreditCard size={14}/> Complete Payment
+                                    </button>
+                                )}
+
+                                {app.status === 'completed' && (
+                                    <button onClick={() => handleAddReview(app)} className="btn btn-ghost btn-sm bg-success/10 text-success rounded-xl text-[10px] font-black uppercase tracking-widest italic flex items-center justify-center gap-2 h-10 min-h-0 w-full">
+                                        <Star size={14}/> Review
+                                    </button>
+                                )}
+
+                                {app.status === 'pending' && (
+                                    <button onClick={() => handleApplicationDelete(app._id)} className="btn btn-ghost btn-sm bg-error/10 text-error rounded-xl text-[10px] font-black uppercase tracking-widest italic flex items-center justify-center gap-2 h-10 min-h-0 w-full col-span-2">
+                                        <Trash2 size={14}/> Cancel Application
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {/* --- Pagination Pagination --- */}
-                <div className="mt-16 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 px-4">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral/40 italic">
-                        Showing Page <span className="text-primary">{currentPage}</span> of {totalPages}
-                    </p>
-                    
-                    <div className="flex items-center gap-3">
+                {/* --- Pagination --- */}
+                <div className="mt-12 md:mt-16 mb-8 flex flex-col items-center gap-6">
+                    <div className="flex items-center gap-2 md:gap-4 overflow-x-auto max-w-full pb-2 no-scrollbar">
                         <button
                             onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
                             disabled={currentPage === 1}
-                            className="btn btn-sm md:btn-md bg-base-200 border-none rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all shadow-lg shadow-neutral/5"
+                            className="btn btn-sm md:btn-md bg-base-200 border-none rounded-xl md:rounded-2xl font-black text-[10px] uppercase italic min-w-[60px]"
                         >
-                            <ChevronLeft size={16} /> Prev
+                            <ChevronLeft size={16} /> <span className="hidden md:inline">Prev</span>
                         </button>
 
-                        <div className="flex gap-2">
-                            {[...Array(totalPages)].map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => handlePageChange(index + 1)}
-                                    className={`btn btn-sm md:btn-md border-none rounded-2xl font-black text-[10px] w-10 md:w-12 transition-all ${
-                                        currentPage === index + 1 
-                                        ? "bg-primary text-white shadow-xl shadow-primary/20 scale-110" 
-                                        : "bg-base-200 text-neutral/40 hover:bg-base-300"
-                                    }`}
-                                >
-                                    {index + 1}
-                                </button>
-                            ))}
+                        <div className="flex gap-1 md:gap-2">
+                            {[...Array(totalPages)].map((_, index) => {
+                                if (totalPages > 5 && Math.abs(currentPage - (index + 1)) > 2) return null;
+                                return (
+                                    <button
+                                        key={index}
+                                        onClick={() => handlePageChange(index + 1)}
+                                        className={`btn btn-sm md:btn-md border-none rounded-xl md:rounded-2xl font-black text-[10px] w-9 h-9 md:w-12 md:h-12 transition-all ${
+                                            currentPage === index + 1 
+                                            ? "bg-primary text-white shadow-lg" 
+                                            : "bg-base-200 text-neutral/40"
+                                        }`}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                );
+                            })}
                         </div>
 
                         <button
                             onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
                             disabled={currentPage === totalPages}
-                            className="btn btn-sm md:btn-md bg-base-200 border-none rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all shadow-lg shadow-neutral/5"
+                            className="btn btn-sm md:btn-md bg-base-200 border-none rounded-xl md:rounded-2xl font-black text-[10px] uppercase italic min-w-[60px]"
                         >
-                            Next <ChevronRight size={16} />
+                            <span className="hidden md:inline">Next</span> <ChevronRight size={16} />
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* --- Modals --- */}
+            {/* --- Detail Modal (Responsive) --- */}
             {selectedApp && (
-                <dialog open className="modal modal-bottom sm:modal-middle backdrop-blur-md">
-                    <div className="modal-box rounded-[3rem] border border-base-300/10 shadow-2xl p-8 md:p-12 relative overflow-hidden bg-base-100">
+                <dialog open className="modal modal-bottom sm:modal-middle backdrop-blur-md px-4">
+                    <div className="modal-box rounded-[2.5rem] md:rounded-[3rem] border border-base-300/10 shadow-2xl p-6 md:p-12 relative overflow-hidden bg-base-100 max-h-[90vh] custom-scrollbar">
                         <div className="absolute top-0 left-0 w-full h-2 bg-primary"></div>
-                        <button onClick={() => setSelectedApp(null)} className="btn btn-sm btn-circle btn-ghost absolute right-8 top-8"><X size={20} /></button>
-                        <div className="mb-10 text-center sm:text-left">
-                            <h3 className="font-black text-3xl md:text-4xl text-neutral italic uppercase tracking-tighter">
+                        <button onClick={() => setSelectedApp(null)} className="btn btn-sm btn-circle btn-ghost absolute right-6 top-6"><X size={20} /></button>
+                        
+                        <div className="mb-8">
+                            <h3 className="font-black text-2xl md:text-4xl text-neutral italic uppercase tracking-tighter">
                                 App <span className="text-primary underline decoration-primary/20">Overview</span>
                             </h3>
                         </div>
-                        <div className="space-y-4 text-left">
+
+                        <div className="space-y-3 md:space-y-4 text-left">
                             <DetailRow label="University" value={selectedApp.universityName} icon={<GraduationCap size={18} />} />
                             <DetailRow label="Subject & Degree" value={`${selectedApp.subjectCategory} (${selectedApp.degree})`} icon={<Info size={18} />} />
                             <DetailRow label="Contact Info" value={selectedApp.phoneNumber || "N/A"} icon={<Phone size={18} />} />
                             <DetailRow label="Residential" value={selectedApp.address || "N/A"} icon={<MapPin size={18} />} />
-                            <div className="mt-6 p-6 bg-primary/5 rounded-[2rem] border border-primary/10">
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-3 italic">University Feedback</p>
+                            <div className="mt-4 p-5 bg-primary/5 rounded-[2rem] border border-primary/10">
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary mb-2 italic">Official Feedback</p>
                                 <p className="text-xs md:text-sm font-bold text-neutral italic leading-relaxed">
                                     {selectedApp.feedback || "Your application is currently being reviewed. You will receive an update shortly."}
                                 </p>
                             </div>
                         </div>
-                        <div className="modal-action mt-10">
-                            <button onClick={() => setSelectedApp(null)} className="btn btn-primary btn-block rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl shadow-primary/20 italic">Close Overview</button>
+                        
+                        <div className="modal-action pt-4">
+                            <button onClick={() => setSelectedApp(null)} className="btn btn-primary btn-block rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-12 italic border-none text-neutral">Close Overview</button>
                         </div>
                     </div>
                 </dialog>
             )}
 
+            {/* --- Edit Modal (Responsive) --- */}
             {isEditModalOpen && (
-                <div className="modal modal-open backdrop-blur-md">
-                    <div className="modal-box rounded-[3rem] p-10 max-w-md border border-base-300/10 shadow-2xl relative bg-base-100">
-                        <button onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-circle btn-ghost absolute right-8 top-8"><X size={20}/></button>
-                        <h3 className="font-black text-2xl mb-10 flex items-center gap-4 italic uppercase tracking-tighter">
-                            <div className="p-3 bg-warning/10 rounded-2xl text-warning shadow-lg shadow-warning/5"><Pencil size={24} /></div>
-                            Update Profile
+                <div className="modal modal-open backdrop-blur-md px-4">
+                    <div className="modal-box rounded-[2.5rem] p-8 md:p-10 max-w-md border border-base-300/10 shadow-2xl relative bg-base-100">
+                        <button onClick={() => setIsEditModalOpen(false)} className="btn btn-sm btn-circle btn-ghost absolute right-6 top-6"><X size={20}/></button>
+                        <h3 className="font-black text-xl mb-8 flex items-center gap-3 italic uppercase tracking-tighter">
+                            <div className="p-2 bg-warning/10 rounded-xl text-warning"><Pencil size={20} /></div>
+                            Update Records
                         </h3>
-                        <form onSubmit={handleSubmit(onEditSubmit)} className="space-y-6 text-left">
+                        <form onSubmit={handleSubmit(onEditSubmit)} className="space-y-5 text-left">
                             <div className="form-control">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-base-content/40 mb-2 px-3 italic">Phone Number</label>
-                                <input type="text" {...register("phoneNumber", { required: true })} className="input input-bordered bg-base-200/50 rounded-2xl font-bold focus:border-primary transition-all h-14" />
+                                <label className="text-[9px] font-black uppercase tracking-widest text-base-content/40 mb-2 px-1 italic">Phone Number</label>
+                                <input type="text" {...register("phoneNumber", { required: true })} className="input input-bordered bg-base-200/50 rounded-xl font-bold h-12 text-sm focus:border-primary border-none" />
                             </div>
                             <div className="form-control">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-base-content/40 mb-2 px-3 italic">Current Address</label>
-                                <textarea {...register("address", { required: true })} className="textarea textarea-bordered bg-base-200/50 rounded-2xl font-bold h-32 focus:border-primary transition-all p-4"></textarea>
+                                <label className="text-[9px] font-black uppercase tracking-widest text-base-content/40 mb-2 px-1 italic">Current Address</label>
+                                <textarea {...register("address", { required: true })} className="textarea textarea-bordered bg-base-200/50 rounded-xl font-bold h-28 text-sm focus:border-primary border-none p-4"></textarea>
                             </div>
-                            <div className="pt-4">
-                                <button type="submit" className="btn btn-primary btn-block rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] shadow-xl shadow-primary/20 h-14 italic">Update Records</button>
+                            <div className="pt-2">
+                                <button type="submit" className="btn btn-primary btn-block rounded-xl font-black uppercase text-[10px] tracking-[0.2em] h-12 italic border-none text-neutral shadow-lg shadow-primary/20">Save Official Changes</button>
                             </div>
                         </form>
                     </div>
@@ -368,11 +405,11 @@ const MyApplications = () => {
 };
 
 const DetailRow = ({ label, value, icon }) => (
-    <div className="flex items-center gap-5 p-5 bg-base-200/50 rounded-[1.5rem] border border-base-300/5 hover:border-primary/20 transition-all group">
-        <div className="p-3.5 bg-base-100 shadow-sm text-primary rounded-xl shrink-0 group-hover:scale-110 transition-transform">{icon}</div>
+    <div className="flex items-center gap-4 p-4 bg-base-200/50 rounded-[1.5rem] border border-base-300/5 hover:border-primary/20 transition-all group">
+        <div className="p-3 bg-base-100 shadow-sm text-primary rounded-xl shrink-0">{icon}</div>
         <div className="overflow-hidden">
-            <p className="text-[9px] font-black uppercase tracking-widest text-base-content/30 mb-1 italic">{label}</p>
-            <p className="text-xs md:text-sm font-black text-neutral leading-tight break-words">{value}</p>
+            <p className="text-[8px] font-black uppercase tracking-widest text-base-content/30 italic">{label}</p>
+            <p className="text-[11px] md:text-sm font-black text-neutral leading-tight truncate md:whitespace-normal">{value}</p>
         </div>
     </div>
 );

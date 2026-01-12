@@ -31,20 +31,29 @@ const ScholarshipDetails = () => {
     });
 
     const handleApply = async () => {
-        if (!user) return toast.error("Please login to apply");
+        if (!user) {
+            toast.error("Please login to apply");
+            return navigate("/auth/login"); // লগইন না থাকলে লগইন পেজে পাঠিয়ে দেওয়া ভালো
+        }
 
         try {
             const res = await axiosSecure.post("/create-checkout-session", {
                 scholarshipId: scholarship._id,
-                scholarshipName: scholarship.scholarshipName,
+                // ব্যাকএন্ড এই ডাটাগুলো দিয়ে applicationsCollection-এ এন্ট্রি তৈরি করবে
+                userName: user?.displayName || "Anonymous Student",
+                userEmail: user?.email,
+                // নিচের তথ্যগুলো অলরেডি ব্যাকএন্ডে স্কলারশিপ আইডি দিয়ে ফেচ করা হচ্ছে, 
+                // তাই এগুলো না পাঠালেও চলে, তবে পাঠালে ব্যাকএন্ডের লোড কমে।
                 universityName: scholarship.universityName,
-                userName: user?.displayName,
-                userEmail: user?.email
+                scholarshipName: scholarship.scholarshipName
             });
 
-            if (res.data.url) window.location.href = res.data.url;
+            if (res.data.url) {
+                window.location.href = res.data.url;
+            }
         } catch (error) {
-            toast.error("Something went wrong with the payment!");
+            console.error("Payment Error:", error);
+            toast.error(error.response?.data?.message || "Something went wrong with the payment!");
         }
     };
 
@@ -53,7 +62,7 @@ const ScholarshipDetails = () => {
     return (
         <div className="bg-base-100 min-h-screen transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 py-20 font-sans">
-                
+
                 {/* --- Navigation --- */}
                 <button
                     onClick={() => navigate(-1)}
@@ -63,7 +72,7 @@ const ScholarshipDetails = () => {
                 </button>
 
                 {/* --- Hero Section --- */}
-                <motion.div 
+                <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="relative rounded-[3rem] lg:rounded-[5rem] overflow-hidden shadow-2xl border-[12px] border-base-200 group ring-1 ring-base-300/10"
@@ -199,7 +208,7 @@ const ScholarshipDetails = () => {
                     <div className="grid md:grid-cols-2 gap-10">
                         {reviews.length > 0 ? (
                             reviews.map((review) => (
-                                <motion.div 
+                                <motion.div
                                     key={review._id}
                                     whileHover={{ y: -5 }}
                                     className="p-10 bg-base-200 rounded-[3rem] border border-base-300/5 shadow-sm hover:shadow-2xl transition-all duration-500 group"

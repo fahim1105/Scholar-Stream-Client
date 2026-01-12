@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
 import Loader from "../../../Components/Loader/Loader";
 import { useState } from "react";
-import { Edit3, Trash2, X, GraduationCap, Calendar, Layers, BookOpen, Settings2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Edit3, Trash2, X, GraduationCap, Calendar, Layers, BookOpen, Settings2, ChevronLeft, ChevronRight, Hash, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 
 const ManageScholarships = () => {
@@ -14,11 +14,10 @@ const ManageScholarships = () => {
     
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const limit = 20;
+    const limit = 20; // মোবাইলে ভালো অভিজ্ঞতার জন্য লিমিট ১০ করা হয়েছে
 
     const { register, handleSubmit, reset } = useForm();
 
-    // Fetching data with page and limit
     const { data: scholarshipData, isLoading, refetch } = useQuery({
         queryKey: ["manage-scholarships", currentPage],
         queryFn: async () => {
@@ -96,21 +95,22 @@ const ManageScholarships = () => {
         <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }} 
-            className="p-4 md:p-8 min-h-screen max-w-7xl mx-auto"
+            className="p-3 md:p-8 min-h-screen max-w-7xl mx-auto overflow-hidden"
         >
-            {/* Header Section */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                <div>
+            {/* --- Header Section --- */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10 md:mb-16">
+                <div className="space-y-1">
                     <h2 className="text-3xl md:text-5xl font-black text-neutral italic uppercase tracking-tighter flex items-center gap-3">
-                        <div className="p-3 bg-primary/10 rounded-2xl text-primary"><Settings2 size={30} /></div>
-                        Manage <span className="text-primary underline decoration-primary/20">Scholarships</span>
+                        <div className="p-3 bg-primary/10 rounded-2xl text-primary"><Settings2 className="w-6 h-6 md:w-8 md:h-8" /></div>
+                        <span>Manage <span className="text-primary underline decoration-primary/20">Scholarships</span></span>
                     </h2>
-                    <p className="text-base-content/50 mt-2 font-bold uppercase text-[9px] md:text-[10px] tracking-[0.3em] px-1 italic">Administrative Control Panel</p>
+                    <p className="text-base-content/40 font-black uppercase text-[8px] md:text-[10px] tracking-[0.3em] px-1 italic">Administrative Control Panel</p>
                 </div>
-                <div className="stats shadow-2xl bg-base-100 rounded-3xl border border-base-300/10">
-                    <div className="stat px-8 py-3">
-                        <div className="stat-title text-[10px] font-black uppercase tracking-widest text-base-content/40">Total Items</div>
-                        <div className="stat-value text-primary text-3xl font-black italic">{scholarshipData?.totalItems || 0}</div>
+                
+                <div className="stats shadow-xl bg-base-100 rounded-3xl border border-base-300/10 w-fit">
+                    <div className="stat px-6 md:px-8 py-2 md:py-3">
+                        <div className="stat-title text-[9px] md:text-[10px] font-black uppercase tracking-widest text-base-content/40">Total Items</div>
+                        <div className="stat-value text-primary text-2xl md:text-3xl font-black italic">{scholarshipData?.totalItems || 0}</div>
                     </div>
                 </div>
             </div>
@@ -160,28 +160,41 @@ const ManageScholarships = () => {
                 </div>
             </div>
 
-            {/* --- Mobile View: Cards --- */}
-            <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {/* --- Mobile & Tablet View: Cards (Responsive Grid) --- */}
+            <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                 {scholarships.map((scholarship, index) => (
-                    <div key={scholarship._id} className="bg-base-100 p-7 rounded-[2.5rem] border border-base-300/10 shadow-xl space-y-5 relative overflow-hidden group">
-                        <div className="flex justify-between items-center relative z-10">
-                            <div className="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-[9px] font-black italic uppercase tracking-widest">
-                                #{(currentPage - 1) * limit + index + 1}
+                    <div key={scholarship._id} className="bg-base-100 p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-base-300/10 shadow-lg space-y-5 relative overflow-hidden flex flex-col justify-between">
+                        {/* Card Header */}
+                        <div className="flex justify-between items-start">
+                            <div className="px-3 py-1 bg-primary/10 text-primary rounded-lg text-[9px] font-black italic uppercase flex items-center gap-1">
+                                <Hash size={10} /> {(currentPage - 1) * limit + index + 1}
                             </div>
-                            <span className="text-[9px] font-black text-base-content/30 uppercase tracking-widest italic">{scholarship.applicationDeadline}</span>
+                            <div className="flex items-center gap-1 text-[9px] font-black text-base-content/30 uppercase tracking-wider italic">
+                                <Clock size={10} /> {scholarship.applicationDeadline}
+                            </div>
                         </div>
-                        <div className="space-y-2 relative z-10">
-                            <h3 className="font-black text-neutral uppercase text-sm leading-tight italic line-clamp-2">{scholarship.scholarshipName}</h3>
+
+                        {/* Card Content */}
+                        <div className="space-y-3">
+                            <h3 className="font-black text-neutral uppercase text-xs md:text-sm leading-snug italic line-clamp-2 min-h-[2.5rem]">
+                                {scholarship.scholarshipName}
+                            </h3>
                             <div className="flex flex-wrap gap-2">
-                                <span className="badge border-none bg-primary/10 text-primary font-black text-[8px] uppercase px-2 h-5 italic tracking-tighter">{scholarship.scholarshipCategory}</span>
-                                <span className="badge border-none bg-base-200 text-neutral/60 font-black text-[8px] uppercase px-2 h-5 italic tracking-tighter">{scholarship.degree}</span>
+                                <span className="bg-primary/10 text-primary font-black text-[8px] uppercase px-2.5 py-1 rounded-md italic tracking-tighter">
+                                    {scholarship.scholarshipCategory}
+                                </span>
+                                <span className="bg-base-200 text-neutral/60 font-black text-[8px] uppercase px-2.5 py-1 rounded-md italic tracking-tighter">
+                                    {scholarship.degree}
+                                </span>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-3 pt-2 relative z-10">
-                            <button onClick={() => openModal(scholarship)} className="btn btn-ghost btn-sm bg-info/10 text-info rounded-2xl text-[10px] font-black uppercase tracking-widest italic flex items-center gap-2">
+
+                        {/* Action Buttons */}
+                        <div className="grid grid-cols-2 gap-3 pt-2">
+                            <button onClick={() => openModal(scholarship)} className="btn btn-ghost btn-sm bg-info/10 text-info rounded-xl text-[10px] font-black uppercase tracking-widest italic flex items-center justify-center gap-2 h-10 min-h-0">
                                 <Edit3 size={14}/> Edit
                             </button>
-                            <button onClick={() => handleDelete(scholarship._id)} className="btn btn-ghost btn-sm bg-error/10 text-error rounded-2xl text-[10px] font-black uppercase tracking-widest italic flex items-center gap-2">
+                            <button onClick={() => handleDelete(scholarship._id)} className="btn btn-ghost btn-sm bg-error/10 text-error rounded-xl text-[10px] font-black uppercase tracking-widest italic flex items-center justify-center gap-2 h-10 min-h-0">
                                 <Trash2 size={14}/> Delete
                             </button>
                         </div>
@@ -189,99 +202,109 @@ const ManageScholarships = () => {
                 ))}
             </div>
 
-            {/* --- Pagination Pagination --- */}
-            <div className="mt-16 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 px-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-neutral/40 italic">
-                    Showing Page <span className="text-primary">{currentPage}</span> of {totalPages}
-                </p>
-                
-                <div className="flex items-center gap-3">
+            {/* --- Pagination (Fully Responsive) --- */}
+            <div className="mt-12 md:mt-16 mb-8 flex flex-col items-center gap-6">
+                <div className="flex items-center gap-2 md:gap-4 overflow-x-auto max-w-full pb-2 no-scrollbar">
                     <button
                         onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
                         disabled={currentPage === 1}
-                        className="btn btn-sm md:btn-md bg-base-200 border-none rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all shadow-lg shadow-neutral/5"
+                        className="btn btn-sm md:btn-md bg-base-200 border-none rounded-xl md:rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all min-w-[60px]"
                     >
-                        <ChevronLeft size={16} /> Prev
+                        <ChevronLeft size={16} /> <span className="hidden md:inline">Prev</span>
                     </button>
 
-                    <div className="flex gap-2">
-                        {[...Array(totalPages)].map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => handlePageChange(index + 1)}
-                                className={`btn btn-sm md:btn-md border-none rounded-2xl font-black text-[10px] w-10 md:w-12 transition-all ${
-                                    currentPage === index + 1 
-                                    ? "bg-primary text-white shadow-xl shadow-primary/20 scale-110" 
-                                    : "bg-base-200 text-neutral/40 hover:bg-base-300"
-                                }`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
+                    <div className="flex gap-1 md:gap-2">
+                        {[...Array(totalPages)].map((_, index) => {
+                            // সল্প পরিসরে পৃষ্ঠা দেখানোর জন্য লজিক (ঐচ্ছিক)
+                            if (totalPages > 5 && Math.abs(currentPage - (index + 1)) > 2) return null;
+                            return (
+                                <button
+                                    key={index}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    className={`btn btn-sm md:btn-md border-none rounded-xl md:rounded-2xl font-black text-[10px] w-9 h-9 md:w-12 md:h-12 transition-all ${
+                                        currentPage === index + 1 
+                                        ? "bg-primary text-white shadow-lg shadow-primary/20 scale-110" 
+                                        : "bg-base-200 text-neutral/40 hover:bg-base-300"
+                                    }`}
+                                >
+                                    {index + 1}
+                                </button>
+                            );
+                        })}
                     </div>
 
                     <button
                         onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
                         disabled={currentPage === totalPages}
-                        className="btn btn-sm md:btn-md bg-base-200 border-none rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all shadow-lg shadow-neutral/5"
+                        className="btn btn-sm md:btn-md bg-base-200 border-none rounded-xl md:rounded-2xl font-black text-[10px] uppercase italic disabled:opacity-20 hover:bg-primary hover:text-white transition-all min-w-[60px]"
                     >
-                        Next <ChevronRight size={16} />
+                        <span className="hidden md:inline">Next</span> <ChevronRight size={16} />
                     </button>
                 </div>
+                
+                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-neutral/40 italic">
+                    Showing Page <span className="text-primary">{currentPage}</span> of {totalPages}
+                </p>
             </div>
 
-            {/* UPDATE MODAL */}
+            {/* UPDATE MODAL (Responsive Fix) */}
             {isModalOpen && (
-                <div className="modal modal-open backdrop-blur-md">
-                    <div className="modal-box max-w-lg rounded-[3.5rem] p-8 md:p-12 border border-base-300/10 shadow-2xl relative bg-base-100">
-                        <div className="absolute top-0 left-0 w-full h-2 bg-primary"></div>
-                        <button onClick={() => setIsModalOpen(false)} className="btn btn-circle btn-sm btn-ghost absolute right-8 top-8">
+                <div className="modal modal-open backdrop-blur-md px-4">
+                    <div className="modal-box w-full max-w-lg rounded-[2rem] md:rounded-[3.5rem] p-6 md:p-12 border border-base-300/10 shadow-2xl relative bg-base-100 max-h-[95vh] overflow-y-auto custom-scrollbar">
+                        <button onClick={() => setIsModalOpen(false)} className="btn btn-circle btn-sm btn-ghost absolute right-4 top-4 md:right-8 md:top-8">
                             <X size={20} />
                         </button>
-                        <h3 className="font-black text-2xl md:text-3xl mb-10 text-neutral italic uppercase tracking-tighter">
-                            Modify <span className="text-primary underline decoration-primary/10">Records</span>
-                        </h3>
-                        <form onSubmit={handleSubmit(handleUpdate)} className="space-y-6">
+                        
+                        <div className="mb-8">
+                            <h3 className="font-black text-xl md:text-3xl text-neutral italic uppercase tracking-tighter">
+                                Modify <span className="text-primary underline decoration-primary/10">Records</span>
+                            </h3>
+                        </div>
+
+                        <form onSubmit={handleSubmit(handleUpdate)} className="space-y-5 md:space-y-6">
                             <div className="form-control">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-base-content/30 mb-2 px-3 italic">Scholarship Headline</label>
+                                <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-base-content/30 mb-2 px-1 italic">Scholarship Headline</label>
                                 <div className="relative">
-                                    <input {...register("scholarshipName", { required: true })} className="input input-bordered w-full rounded-2xl bg-base-200/50 border-none focus:ring-2 ring-primary transition-all font-bold h-14 pl-12" />
-                                    <BookOpen className="absolute left-4 top-4 text-primary opacity-40" size={20} />
+                                    <input {...register("scholarshipName", { required: true })} className="input input-bordered w-full rounded-xl md:rounded-2xl bg-base-200/50 border-none focus:ring-2 ring-primary transition-all font-bold h-12 md:h-14 pl-10 md:pl-12 text-xs md:text-sm" />
+                                    <BookOpen className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-primary opacity-40" size={18} />
                                 </div>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                 <div className="form-control">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-base-content/30 mb-2 px-3 italic">Funding Type</label>
+                                    <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-base-content/30 mb-2 px-1 italic">Funding Type</label>
                                     <div className="relative">
-                                        <select {...register("scholarshipCategory")} className="select select-bordered w-full rounded-2xl bg-base-200/50 border-none font-bold h-14 pl-12 appearance-none">
+                                        <select {...register("scholarshipCategory")} className="select select-bordered w-full rounded-xl md:rounded-2xl bg-base-200/50 border-none font-bold h-12 md:h-14 pl-10 md:pl-12 appearance-none text-xs md:text-sm">
                                             <option>Full Fund</option>
                                             <option>Partial Fund</option>
                                             <option>Self Fund</option>
                                         </select>
-                                        <Layers className="absolute left-4 top-4 text-primary opacity-40" size={20} />
+                                        <Layers className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-primary opacity-40" size={18} />
                                     </div>
                                 </div>
                                 <div className="form-control">
-                                    <label className="text-[10px] font-black uppercase tracking-widest text-base-content/30 mb-2 px-3 italic">Academic Degree</label>
+                                    <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-base-content/30 mb-2 px-1 italic">Academic Degree</label>
                                     <div className="relative">
-                                        <select {...register("degree")} className="select select-bordered w-full rounded-2xl bg-base-200/50 border-none font-bold h-14 pl-12">
+                                        <select {...register("degree")} className="select select-bordered w-full rounded-xl md:rounded-2xl bg-base-200/50 border-none font-bold h-12 md:h-14 pl-10 md:pl-12 text-xs md:text-sm">
                                             <option>Bachelor</option>
                                             <option>Masters</option>
                                             <option>PhD</option>
                                         </select>
-                                        <GraduationCap className="absolute left-4 top-4 text-primary opacity-40" size={20} />
+                                        <GraduationCap className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-primary opacity-40" size={18} />
                                     </div>
                                 </div>
                             </div>
+
                             <div className="form-control">
-                                <label className="text-[10px] font-black uppercase tracking-widest text-base-content/30 mb-2 px-3 italic">Final Submission Deadline</label>
+                                <label className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-base-content/30 mb-2 px-1 italic">Final Submission Deadline</label>
                                 <div className="relative">
-                                    <input type="date" {...register("applicationDeadline")} className="input input-bordered w-full rounded-2xl bg-base-200/50 border-none font-bold h-14 pl-12" />
-                                    <Calendar className="absolute left-4 top-4 text-primary opacity-40" size={20} />
+                                    <input type="date" {...register("applicationDeadline")} className="input input-bordered w-full rounded-xl md:rounded-2xl bg-base-200/50 border-none font-bold h-12 md:h-14 pl-10 md:pl-12 text-xs md:text-sm" />
+                                    <Calendar className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-primary opacity-40" size={18} />
                                 </div>
                             </div>
-                            <div className="pt-6">
-                                <button type="submit" className="btn btn-primary btn-block rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-14 shadow-xl shadow-primary/20 italic">
+
+                            <div className="pt-4 md:pt-6">
+                                <button type="submit" className="btn btn-primary btn-block rounded-xl md:rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] h-12 md:h-14 shadow-xl shadow-primary/20 italic border-none text-neutral">
                                     Apply Official Changes
                                 </button>
                             </div>

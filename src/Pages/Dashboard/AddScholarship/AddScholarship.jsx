@@ -14,10 +14,13 @@ const AddScholarship = () => {
     const { user } = UseAuth();
 
     const onSubmit = (data) => {
+        // ট্যাগগুলোকে অ্যারেতে রূপান্তর এবং ডাটা প্রসেসিং
         const payload = {
             ...data,
+            // যেহেতু valueAsNumber ব্যবহার করা হয়েছে, নিচের ফি গুলো এখন সরাসরি Number হিসেবে আসবে
             tags: data.tags ? data.tags.split(",").map(tag => tag.trim()) : [],
             postedUserEmail: user?.email,
+            createdAt: new Date()
         };
 
         Swal.fire({
@@ -45,6 +48,9 @@ const AddScholarship = () => {
                             });
                             navigate("/all-scholarships");
                         }
+                    })
+                    .catch(err => {
+                        Swal.fire("Error", "Failed to save scholarship", "error");
                     });
             }
         });
@@ -105,7 +111,7 @@ const AddScholarship = () => {
                             </div>
                             <div>
                                 <label className={labelStyle}>World Rank</label>
-                                <input type="number" {...register("universityWorldRank")} placeholder="e.g. 1" className={inputStyle} />
+                                <input type="number" {...register("universityWorldRank", { valueAsNumber: true })} placeholder="e.g. 1" className={inputStyle} />
                             </div>
                         </div>
                     </div>
@@ -146,17 +152,27 @@ const AddScholarship = () => {
                         </div>
                     </div>
 
-                    {/* 3. Fees & Dates */}
+                    {/* 3. Fees & Dates (CRITICAL CHANGES HERE) */}
                     <div>
                         <h2 className={sectionTitle}><DollarSign size={20} className="text-primary" /> Fees & Deadlines</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                             <div>
                                 <label className={labelStyle}>App Fees ($)</label>
-                                <input type="number" {...register("applicationFees")} placeholder="0" className={inputStyle} />
+                                <input 
+                                    type="number" 
+                                    {...register("applicationFees", { required: true, valueAsNumber: true })} 
+                                    placeholder="0" 
+                                    className={inputStyle} 
+                                />
                             </div>
                             <div>
                                 <label className={labelStyle}>Service Charge ($)</label>
-                                <input type="number" {...register("serviceCharge")} placeholder="0" className={inputStyle} />
+                                <input 
+                                    type="number" 
+                                    {...register("serviceCharge", { required: true, valueAsNumber: true })} 
+                                    placeholder="0" 
+                                    className={inputStyle} 
+                                />
                             </div>
                             <div>
                                 <label className={labelStyle}>Deadline</label>
