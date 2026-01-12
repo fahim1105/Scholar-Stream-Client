@@ -19,7 +19,7 @@ const MyApplications = () => {
     const [editingApp, setEditingApp] = useState(null);
     
     const [currentPage, setCurrentPage] = useState(1);
-    const limit = 10; // মোবাইলে পারফরম্যান্সের জন্য ১০ করা হয়েছে
+    const limit = 20; // মোবাইলে পারফরম্যান্সের জন্য ১০ করা হয়েছে
 
     const { register, handleSubmit, setValue, reset } = useForm();
 

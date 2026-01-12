@@ -10,7 +10,7 @@ import { useState } from "react";
 const ManageUsers = () => {
     const axiosSecure = UseAxiosSecure();
     const [currentPage, setCurrentPage] = useState(1);
-    const limit = 10; // রেসপন্সিভনেসের জন্য লিমিট ১০ করা হয়েছে
+    const limit = 20; // রেসপন্সিভনেসের জন্য লিমিট ১০ করা হয়েছে
 
     const { data: userData, isLoading, refetch } = useQuery({
         queryKey: ["users", currentPage],
