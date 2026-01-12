@@ -196,7 +196,7 @@ const Register = () => {
                 <button
                     type="button"
                     onClick={handleGoogleLogin}
-                    className="w-full flex items-center justify-center gap-3 bg-base-100 border border-base-300 py-3 rounded-2xl hover:bg-neutral hover:text-white transition-all font-black text-[10px] uppercase tracking-widest italic group shadow-sm"
+                    className="w-full flex items-center justify-center gap-3 bg-base-100 border border-base-300 py-3 rounded-2xl hover:bg-neutral hover:text-base-100 transition-all font-black text-[10px] uppercase tracking-widest italic group shadow-sm"
                 >
                     <FcGoogle size={20} className="group-hover:scale-110 transition-transform" />
                     <span>Register with Google</span>

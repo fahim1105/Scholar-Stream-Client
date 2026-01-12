@@ -137,7 +137,7 @@ const Login = () => {
                         New here? <span className="text-primary underline decoration-2 underline-offset-4">Create Account</span>
                     </Link>
 
-                    <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center gap-3 py-3 bg-base-100 border border-base-300 rounded-2xl hover:bg-neutral hover:text-white transition-all font-black text-[10px] uppercase tracking-widest italic group">
+                    <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center gap-3 py-3 bg-base-100 border border-base-300 rounded-2xl hover:bg-neutral hover:text-base-100 transition-all font-black text-[10px] uppercase tracking-widest italic group">
                         <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google" className="w-4 h-4 group-hover:invert transition-all" />
                         Google Login
                     </button>

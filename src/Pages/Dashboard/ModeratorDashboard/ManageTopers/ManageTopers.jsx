@@ -152,7 +152,7 @@ const ManageToppers = () => {
 
                         <div className="flex justify-end gap-4 pt-4">
                             {editingId && (
-                                <button type="button" onClick={cancelEdit} className="px-8 py-4 bg-base-300 text-neutral font-black uppercase text-[10px] tracking-widest rounded-2xl hover:bg-base-200 transition-all italic flex items-center gap-2">
+                                <button type="button" onClick={cancelEdit} className="px-8 py-4 bg-neutral text-base-100 font-black uppercase text-[10px] tracking-widest rounded-2xl hover:text-neutral hover:bg-base-200 transition-all italic flex items-center gap-2">
                                     <FaTimesCircle /> Cancel
                                 </button>
                             )}
